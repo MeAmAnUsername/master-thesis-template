@@ -2,4 +2,52 @@
 
 \chapter{\label{chap:introduction}Introduction}
 
-Introduction here.\autocite{SustrikZeroMQ}
+todo{short introduction: what is spoofax?}
+todo{short introduction: what is PIE?}
+
+Using the PIE framework requires a lot of boilerplate.
+To mediate this, the PIE DSL is a DSL to specify PIE pipelines.
+It compiles to Java.
+The PIE DSL was created by Gabriël Konat in todo{reference} as part of his work on the PIE framework.
+This included a compiler from PIE DSL to Kotlin.
+For various reasons compiling to Kotlin was deemed undesirable, so Ivo Wilms implemented a compiler from the DSL to Java [is there a reference? If not: add footnote to explain why].
+
+\section{\label{sec:introduction__problem_statement}Problem statement}
+The PIE DSL was not [powerful|expressive|extensive] enough to be used in many real world use cases.
+The Java compiler implemented by used string interpolation, which (as it turned out) is "suboptimal" \footnote{it's severely limiting, don't do it}.
+
+Problems:
+\begin{enumerate}
+  \item Existing compilers are [bad]
+  \begin{itemize}
+     \item Compiler to Kotlin is outdated, compiling to Kotlin is undesirable.
+     \item Compiler to Java compiles via string interpolation, which is very limiting.
+   \end{itemize}
+  \item Single file only (does not scale to multi-language project setups, see [ref: case study database pipelines])
+  \item Expressiveness
+  \begin{enumerate}
+    \item No way to express core concepts of PIE, e.g. Suppliers [also maybe Results]
+    \item No way to declare injected values for tasks
+  \end{enumerate}
+\end{enumerate}
+
+Objectives
+\begin{itemize}
+  \item Solve these problems
+  \item Keep the PIE DSL general
+  \begin{itemize}
+    \item It could also compile to another language if another compiler and PIE framework were written in that language.
+    \item It should work for pipelines in general, not just Spoofax pipelines.
+  \end{itemize}
+\end{itemize}
+
+\section{\label{sec:introduction__solution}Solution}
+\begin{enumerate}
+  \item Implement a compiler that compiles to Java using Java ASTs
+  \item Implement a module system
+  \item Extend the old PIE DSL with new constructs
+  \begin{enumerate}
+    \item Add `supplier<T>` construct
+    \item Add context parameters construct
+  \end{enumerate}
+\end{enumerate}
