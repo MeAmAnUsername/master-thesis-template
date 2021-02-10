@@ -16,6 +16,9 @@ missfont.log
 # logreq request file, keeps track of requests to rerun Latex compiler
 *.run.xml
 
+# Intellij
+/.idea
+
 # adapted from github/misberner/.gitignore-latex
 # https://gist.github.com/misberner/8316891
 # LaTeX temporary files
