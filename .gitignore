@@ -10,3 +10,35 @@ missfont.log
 *.fdb_latexmk
 *.aux
 .~lock.document.pdf#
+*.lof  # Latex auxilary file - list of figures
+*.lot  # Latex auxilary file - list of tables
+*.run.xml  # logreq request file, keeps track of requests to rerun Latex compiler
+
+# adapted from github/misberner/.gitignore-latex
+# https://gist.github.com/misberner/8316891
+# LaTeX temporary files
+*.aux
+*.log
+*.toc
+
+# PDF output - usually a bad idea to keep this in Git
+*.pdf
+
+# Latexmk
+*.fdb_latexmk
+
+# SyncTeX
+*.synctex.gz
+
+# LaTeX Beamer
+*.snm
+*.vrb
+*.nav
+*.out
+
+# BibTeX
+*.bbl
+*.blg
+
+# Log created by Adobe Reader
+C:\\nppdf32Log\\debuglog.txt
