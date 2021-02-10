@@ -10,9 +10,11 @@ missfont.log
 *.fdb_latexmk
 *.aux
 .~lock.document.pdf#
-*.lof  # Latex auxilary file - list of figures
-*.lot  # Latex auxilary file - list of tables
-*.run.xml  # logreq request file, keeps track of requests to rerun Latex compiler
+# Latex auxilary file - list of figures/tables
+*.lof
+*.lot
+# logreq request file, keeps track of requests to rerun Latex compiler
+*.run.xml
 
 # adapted from github/misberner/.gitignore-latex
 # https://gist.github.com/misberner/8316891
