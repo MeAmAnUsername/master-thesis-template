@@ -1,0 +1,150 @@
+\RequireVersions{
+  *{application}{eTeX}    {0000/00/00 v2.6}
+  *{format} {LaTeX2e}     {2020-02-02 v2.e}
+  *{package}{snapshot}    {2012/08/06 v2.13}
+  *{class}  {memoir}      {2020/03/25 v3.7k}
+  *{package}{iftex}       {2020/03/06 v1.0d}
+  *{file}   {mem11.clo}   {2008/01/30 v0.3}
+  *{package}{array}       {2019/08/31 v2.4l}
+  *{package}{dcolumn}     {2014/10/28 v1.06}
+  *{package}{delarray}    {2014/10/28 v1.01}
+  *{package}{tabularx}    {2020/01/15 v2.11c}
+  *{package}{textcase}    {2019/09/14 v1.00}
+  *{package}{document}    {0000/00/00 v0.0}
+  *{package}{amsmath}     {2020/01/20 v2.17e}
+  *{package}{amstext}     {2000/06/29 v2.01}
+  *{package}{amsgen}      {1999/11/30 v2.0}
+  *{package}{amsbsy}      {1999/11/29 v1.2d}
+  *{package}{amsopn}      {2016/03/08 v2.02}
+  *{package}{hyperref}    {2020/01/14 v7.00d}
+  *{package}{ltxcmds}     {2019/12/15 v1.24}
+  *{package}{pdftexcmds}  {2019/11/24 v0.31}
+  *{package}{infwarerr}   {2019/12/03 v1.5}
+  *{package}{keyval}      {2014/10/28 v1.15}
+  *{package}{kvsetkeys}   {2019/12/15 v1.18}
+  *{package}{kvdefinekeys}{2019-12-19 v1.6}
+  *{package}{pdfescape}   {2019/12/09 v1.15}
+  *{package}{hycolor}     {2020-01-27 v1.10}
+  *{package}{letltxmacro} {2019/12/03 v1.6}
+  *{package}{auxhook}     {2019-12-17 v1.6}
+  *{package}{kvoptions}   {2019/11/29 v3.13}
+  *{file}   {pd1enc.def}  {2020/01/14 v7.00d}
+  *{package}{intcalc}     {2019/12/15 v1.3}
+  *{package}{etexcmds}    {2019/12/15 v1.7}
+  *{package}{url}         {2013/09/16 v3.4}
+  *{package}{bitset}      {2019/12/09 v1.3}
+  *{package}{bigintcalc}  {2019/12/15 v1.5}
+  *{package}{atbegshi}    {2019/12/05 v1.19}
+  *{package}{memhfixc}    {2019/10/24 v1.18}
+  *{file}   {hxetex.def}  {2020/01/14 v7.00d}
+  *{file}   {puenc.def}   {2020/01/14 v7.00d}
+  *{package}{stringenc}   {2019/11/29 v1.12}
+  *{package}{rerunfilecheck}{2019/12/05 v1.9}
+  *{package}{atveryend}   {2019-12-11 v1.11}
+  *{package}{uniquecounter}{2019/12/15 v1.4}
+  *{package}{cleveref}    {2018/03/27 v0.21.4}
+  *{package}{xargs}       {2008/03/22 v1.1}
+  *{package}{xkeyval}     {2014/12/03 v2.7a}
+  *{file}   {xkeyval.tex} {2014/12/03 v2.7a}
+  *{package}{graphicx}    {2019/11/30 v1.2a}
+  *{package}{graphics}    {2019/11/30 v1.4a}
+  *{package}{trig}        {2016/01/03 v1.10}
+  *{file}   {graphics.cfg}{2016/06/04 v1.11}
+  *{file}   {dvips.def}   {2017/06/20 v3.1d}
+  *{package}{color}       {1999/02/16 v0.0}
+  *{file}   {color.cfg}   {2016/01/02 v1.6}
+  *{file}   {dvipsnam.def}{2016/06/17 v3.0m}
+  *{package}{xcolor}      {2016/05/11 v2.12}
+  *{file}   {color.cfg}   {2016/01/02 v1.6}
+  *{file}   {xetex.def}   {2017/06/24 v5.0h}
+  *{file}   {dvipsnam.def}{2016/06/17 v3.0m}
+  *{package}{xltxtra}     {2018/12/31 v0.7}
+  *{package}{ifluatex}    {2019/10/25 v1.5}
+  *{package}{ifxetex}     {2019/10/25 v0.7}
+  *{package}{fontspec}    {2020/02/21 v2.7i}
+  *{package}{xparse}      {2020-03-06 v3}
+  *{package}{expl3}       {2020-03-06 v3}
+  *{file}   {l3backend-xdvipdfmx.def}{2020-03-12 v3}
+  *{package}{fontspec-xetex}{2020/02/21 v2.7i}
+  *{package}{fontenc}     {0000/00/00 v0.0}
+  *{file}   {fontspec.cfg}{0000/00/00 v0.0}
+  *{package}{realscripts} {2016/02/13 v0.3d}
+  *{package}{metalogo}    {2010/05/29 v0.12}
+  *{package}{xunicode}    {2011/09/09 v0.981}
+  *{package}{mathabx}     {2003/07/29 v0.0}
+  *{package}{microtype}   {2019/11/18 v2.7d}
+  *{file}   {microtype-xetex.def}{2019/11/18 v2.7d}
+  *{file}   {microtype.cfg}{2019/11/18 v2.7d}
+  *{package}{listings}    {2020/03/24 v1.8d}
+  *{package}{lstmisc}     {2020/03/24 v1.8d}
+  *{file}   {listings.cfg}{2020/03/24 v1.8d}
+  *{package}{csquotes}    {2019-12-06 v5.2j}
+  *{package}{etoolbox}    {2019/09/21 v2.5h}
+  *{file}   {csquotes.def}{2019-12-06 v5.2j}
+  *{file}   {csquotes.cfg}{0000/00/00 v0.0}
+  *{package}{mscthesis}   {0000/00/00 v0.0}
+  *{package}{wrapfig}     {2003/01/31 v3.6}
+  *{package}{todonotes}   {2018/11/22 v0.0}
+  *{package}{ifthen}      {2014/09/29 v1.1c}
+  *{package}{tikz}        {2020/01/08 v3.1.5b}
+  *{package}{pgf}         {2020/01/08 v3.1.5b}
+  *{package}{pgfrcs}      {2020/01/08 v3.1.5b}
+  *{package}{everyshi}    {2001/05/15 v3.00}
+  *{file}   {pgfrcs.code.tex}{0000/00/00 v0.0}
+  *{package}{pgfcore}     {2020/01/08 v3.1.5b}
+  *{package}{pgfsys}      {2020/01/08 v3.1.5b}
+  *{file}   {pgfsys.code.tex}{0000/00/00 v0.0}
+  *{file}   {pgfsyssoftpath.code.tex}{2020/01/08 v3.1.5b}
+  *{file}   {pgfsysprotocol.code.tex}{2020/01/08 v3.1.5b}
+  *{file}   {pgfcore.code.tex}{0000/00/00 v0.0}
+  *{package}{pgfcomp-version-0-65}{2020/01/08 v3.1.5b}
+  *{package}{pgfcomp-version-1-18}{2020/01/08 v3.1.5b}
+  *{package}{pgffor}      {2020/01/08 v3.1.5b}
+  *{package}{pgfkeys}     {0000/00/00 v0.0}
+  *{file}   {pgfkeys.code.tex}{0000/00/00 v0.0}
+  *{package}{pgfmath}     {0000/00/00 v0.0}
+  *{file}   {pgfmath.code.tex}{0000/00/00 v0.0}
+  *{file}   {pgffor.code.tex}{0000/00/00 v0.0}
+  *{file}   {tikz.code.tex}{0000/00/00 v0.0}
+  *{package}{calc}        {2017/05/25 v4.3}
+  *{package}{biblatex}    {2019/12/01 v3.14}
+  *{package}{logreq}      {2010/08/04 v1.0}
+  *{file}   {logreq.def}  {2010/08/04 v1.0}
+  *{file}   {blx-dm.def}  {2019/12/01 v3.14}
+  *{file}   {blx-unicode.def}{0000/00/00 v0.0}
+  *{file}   {blx-compat.def}{2019/12/01 v3.14}
+  *{file}   {biblatex.def}{2019/12/01 v3.14}
+  *{file}   {standard.bbx}{2019/12/01 v3.14}
+  *{file}   {authoryear.bbx}{2019/12/01 v3.14}
+  *{file}   {authoryear.cbx}{2019/12/01 v3.14}
+  *{file}   {biblatex.cfg}{0000/00/00 v0.0}
+  *{package}{xassoccnt}   {2018/12/28 v1.7}
+  *{package}{l3keys2e}    {2020-03-06 v2e}
+  *{package}{acronym}     {2020/03/13 v1.46}
+  *{package}{suffix}      {2006/07/15 v1.5a}
+  *{package}{xstring}     {2019/02/06 v1.83}
+  *{file}   {metadata}    {0000/00/00 v0.0}
+  *{file}   {ts1cmr.fd}   {2019/12/16 v2.5j}
+  *{file}   {t3cmr.fd}    {2001/12/31 v0.0}
+  *{-------}{Document-specific files:}{----}
+  *{package}{nameref}     {2019/09/16 v2.46}
+  *{package}{refcount}    {2019/12/15 v3.6}
+  *{package}{gettitlestring}{2019/12/15 v1.6}
+  *{file}   {document.out}{0000/00/00 v0.0}
+  *{file}   {document.out}{0000/00/00 v0.0}
+  *{file}   {mt-PalatinoLinotype.cfg}{2012/03/10 v1.0}
+  *{file}   {english.lbx} {2019/12/01 v3.14}
+  *{file}   {./img/maze.ps}{0000/00/00 v0.0}
+  *{file}   {se-ascii-print.def}{2019/11/29 v1.12}
+  *{file}   {mt-cmr.cfg}  {2013/05/19 v2.2}
+  *{file}   {img/tudelft_logo_bw.eps}{0000/00/00 v0.0}
+  *{file}   {000-abstract}{0000/00/00 v0.0}
+  *{file}   {000-committee}{0000/00/00 v0.0}
+  *{file}   {010-preface.tex}{0000/00/00 v0.0}
+  *{file}   {100-introduction.tex}{0000/00/00 v0.0}
+  *{file}   {500-evaluation.tex}{0000/00/00 v0.0}
+  *{file}   {600-related-work.tex}{0000/00/00 v0.0}
+  *{file}   {700-conclusion.tex}{0000/00/00 v0.0}
+  *{file}   {acronyms.tex}{0000/00/00 v0.0}
+  *{file}   {A00-appendix.tex}{0000/00/00 v0.0}
+}
