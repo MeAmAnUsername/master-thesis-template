@@ -1,0 +1,57 @@
+\chapter{\label{chap:solution}Solution}
+
+\todo{describe full PIE DSL specification}
+
+\section{\label{sec:solution__statix}}
+Generics are a significant part of the Java implementation of \acronym{PIE}.
+During development of the \acronym{PIE} \acronym{DSL}, it was determined that interoperating between the \acronym{PIE} \acronym{DSL} with Java would be easier if the \acronym{DSL} also implemented generics.
+Originally, the static semantics for \acronym{PIE} were implemented in NaBL2, a \acronym{DSL} for static semantics from the Spoofax ecosystem.
+Unfortunately, \acronym{NaBL2} is either not expressive enough to implement generics, or at the very least it is complicated enough that efforts to achieve that were abandoned. \todo{describe attempt in NaBL2 - create new declaration for each instance of the generic class}
+Instead, we decided to re-implement \todo{better word than "re-implement"} the static semantics in Statix, the successor of \acronym{NaBL2}.
+Statix is described in detail in <todo>.\todo{add reference}
+
+Statix and \acronym{NaBL2} operate mostly on the same high-level model: scope graphs and constraints.
+One of the major changes compared to \acronym{NaBL2} is that scope graph construction and constraint solving are no longer two separate steps.
+Instead, constraints are solved when enough information is known that their result cannot change anymore.
+
+\subsection{\label{subsec:solution__statix__module_system}Module system}
+Because Statix and \acronym{NaBL2} use the same model, most of the changeover to Statix was fairly mechanical.
+One part that was not trivial is the module system in the \acronym{PIE} \acronym{DSL}.
+The implementation in \acronym{NaBL2} did not implement the full specification, but simply used an import edge to import modules. \todo{add an example?}
+The implementation in Statix does implement the full specification.
+Partial imports \todo{add code} in combination with renaming make the implementation of the module system non-trivial.
+\inlinecode{renamed:sub:someFunc} should resolve, even if it is defined in a module \inlinecode{someModule:original_name:sub:someFunc}.
+This leads to the decision to create scopes for each submodule, and to declare submodules of the current module in the \inlinecode{mod} relation:
+\todo{create figure: `s { relations {mod : (module_name, s_mod)}}`
+
+To declare the modules, the approach that matches the semantic model the most is a tree of submodules.
+The most straightforward way to create such a tree is adding modules one at a time by checking if the submodule already exists and creating it if it does not, in Statix code:
+\blockcode{
+declareModule : scope * list(MODID)
+declareModule(s, []).
+declareModule(s, [name|names]) :-
+  getOrCreateModuleScope(s, name) == s_mod,
+  declareModule(s_mod, names). // not allowed: declareModule may try to extend s_mod, but we do not have permission to extend it.
+
+getOrCreateModuleScope : scope * MODID -> scope
+getOrCreateModuleScope(s, name) = s_mod:-
+  query [...] |-> occs,
+  getOrCreateModuleScope_1(s, occs, name) == s_mod.
+  
+  getOrCreateModuleScope_1 : scope * (path * (MODID * scope)) * MODID
+  getOrCreateModuleScope_1(s, [(_, (_, s_mod))], _) = s_mod. // submodule was already declared.
+  getOrCreateModuleScope_1(s, [], name) = s_mod :- // submodule not declared yet, declare a new one
+    new s_mod,
+    !mod[name, s_mod] in s.
+}
+This is not allowed due to Statix semantics: only scopes that were passed down as an argument to the current function or that were created in the current function can be extended.
+
+Since the most straightforward approach does not work, there are a few alternatives to consider:
+1. Create a representation of the full module tree before converting it to its representation in the scope graph.
+2. Declare each module as its own linked list from the root scope.
+3. \todo{look up other proposed solutions in slack}
+
+
+\subsection{\label{subsec:solution__statix__generics}Generics}
+[I will start writing this section when I actually start on implementing generics]
+\todo{describe generics}

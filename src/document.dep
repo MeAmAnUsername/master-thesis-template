@@ -142,6 +142,7 @@
   *{file}   {000-committee}{0000/00/00 v0.0}
   *{file}   {010-preface.tex}{0000/00/00 v0.0}
   *{file}   {100-introduction.tex}{0000/00/00 v0.0}
+  *{file}   {300-solution.tex}{0000/00/00 v0.0}
   *{file}   {500-evaluation.tex}{0000/00/00 v0.0}
   *{file}   {600-related-work.tex}{0000/00/00 v0.0}
   *{file}   {700-conclusion.tex}{0000/00/00 v0.0}
