@@ -4,25 +4,25 @@
 hello?
 
 \section{\label{sec:solution__statix}Statix}
-%Generics are a significant part of the Java implementation of \acronym{PIE}.
-%During development of the \acronym{PIE} \acronym{DSL}, it was determined that interoperating between the \acronym{PIE} \acronym{DSL} with Java would be easier if the \acronym{DSL} also implemented generics.
-%Originally, the static semantics for \acronym{PIE} were implemented in NaBL2, a \acronym{DSL} for static semantics from the Spoofax ecosystem.
-%Unfortunately, \acronym{NaBL2} is either not expressive enough to implement generics, or at the very least it is complicated enough that efforts to achieve that were abandoned. \todo{describe attempt in NaBL2 - create new declaration for each instance of the generic class}
-%Instead, we decided to re-implement \todo{better word than "re-implement"} the static semantics in Statix, the successor of \acronym{NaBL2}.
+Generics are a significant part of the Java implementation of \ac{PIE}.
+During development of the \ac{PIE} \ac{DSL}, it was determined that interoperating between the \ac{PIE} \ac{DSL} with Java would be easier if the \ac{DSL} also implemented generics.
+Originally, the static semantics for \ac{PIE} were implemented in NaBL2, a \ac{DSL} for static semantics from the Spoofax ecosystem.
+Unfortunately, \ac{NaBL2} is either not expressive enough to implement generics, or at the very least it is complicated enough that efforts to achieve that were abandoned. \todo{describe attempt in NaBL2 - create new declaration for each instance of the generic class}
+Instead, we decided to re-implement \todo{better word than "re-implement"} the static semantics in Statix, the successor of \ac{NaBL2}.
 Statix is described in detail in <todo>.\todo{add reference}
 
-%Statix and \acronym{NaBL2} operate mostly on the same high-level model: scope graphs and constraints.
-%One of the major changes compared to \acronym{NaBL2} is that scope graph construction and constraint solving are no longer two separate steps.
+Statix and \ac{NaBL2} operate mostly on the same high-level model: scope graphs and constraints.
+One of the major changes compared to \ac{NaBL2} is that scope graph construction and constraint solving are no longer two separate steps.
 Instead, constraints are solved when enough information is known that their result cannot change anymore.
 
 \subsection{\label{subsec:solution__statix__module_system}Module system}
-%Because Statix and \acronym{NaBL2} use the same model, most of the changeover to Statix was fairly mechanical.
-%One part that was not trivial is the module system in the \acronym{PIE} \acronym{DSL}.
-%The implementation in \acronym{NaBL2} did not implement the full specification, but simply used an import edge to import modules. \todo{add an example?}
+Because Statix and \ac{NaBL2} use the same model, most of the changeover to Statix was fairly mechanical.
+One part that was not trivial is the module system in the \ac{PIE} \ac{DSL}.
+The implementation in \ac{NaBL2} did not implement the full specification, but simply used an import edge to import modules. \todo{add an example?}
 The implementation in Statix does implement the full specification.
 Partial imports \todo{add code} in combination with renaming make the implementation of the module system non-trivial.
 %\inlinecode{renamed:sub:someFunc} should resolve, even if it is defined in a module \inlinecode{someModule:original_name:sub:someFunc}.
-%This leads to the decision to create scopes for each submodule, and to declare submodules of the current module in the \inlinecode{mod} relation:
+This leads to the decision to create scopes for each submodule, and to declare submodules of the current module in the \inlinecode{mod} relation:
 \todo{create figure} % figure: `s { relations {mod : (module_name, s_mod)}}`
 
 To declare the modules, the approach that matches the semantic model the most is a tree of submodules.
@@ -56,31 +56,31 @@ Since the most straightforward approach does not work, there are a few alternati
 The second solution means that each submodule can have multiple scopes associated with it.
 To resolve a qualified function, the query would need to run for each of the scopes, and the results would need to be merged manually.
 The number of queries grow linearly with the number of module scopes.
-%Alternatively, we could define a temporary scope that has \inlinecode{I} edges to all module scopes so that we can run a single query.
+Alternatively, we could define a temporary scope that has \inlinecode{I} edges to all module scopes so that we can run a single query.
 In this case, there is only one query, but the number of temporary scopes to point to all the module scopes grows linearly with the number of references to this module.
 Ideally, there is only constant growth: a single reference does not create scopes and runs a single query to resolve the reference.
 This means that I went for the first option: build a data structure that represents the module tree and instantiate that.
 
-%First of all, we want to create the representation of the module tree in the \inlinecode{projectOk} function.
+First of all, we want to create the representation of the module tree in the \inlinecode{projectOk} function.
 To do this, we first need a list of the modules to declare.
-%This is not entirely trivial, because \inlinecode{projectOk} does not get a list of files.
+This is not entirely trivial, because \inlinecode{projectOk} does not get a list of files.
 %To pass the modules to \inlinecode{projectOk}, we declare each module in a dedicated relation \inlinecode{mod_wip} in \inlinecode{programOk}.
-%This relation is then queried by \inlinecode{projectOk} to get the list of modules.
+This relation is then queried by \inlinecode{projectOk} to get the list of modules.
 
 %The data structure representing the module tree uses two constructors: \inlinecode{ModuleTreeRoot : list(scope) * list(ModuleTree) -> ModuleTree} and \inlinecode{ModuleTreeNode : MODID * list(scope) * list(scope) * list(ModuleTree) -> ModuleTree}.
-%The \inlinecode{ModuleTreeRoot} contains a list of file scopes and a list of submodules.
-%A \inlinecode{ModuleTreeNode} has the name of the submodule, a list of file scopes, a list of tree scopes representing the same submodule, and a list of submodules.
-%The function \inlinecode{addToModuleTree} adds a \inlinecode{MODULE} to a moduleTree.
-%A \inlinecode{MODULE} is a list of names and a scope.
-%The sort \inlinecode{MODULE} has two constructors: \inlinecode{MODULE}, where the scope represents a file, and \inlinecode{SUBMODULE}, where it represents a module tree scope.
+The \inlinecode{ModuleTreeRoot} contains a list of file scopes and a list of submodules.
+A \inlinecode{ModuleTreeNode} has the name of the submodule, a list of file scopes, a list of tree scopes representing the same submodule, and a list of submodules.
+The function \inlinecode{addToModuleTree} adds a \inlinecode{MODULE} to a moduleTree.
+A \inlinecode{MODULE} is a list of names and a scope.
+The sort \inlinecode{MODULE} has two constructors: \inlinecode{MODULE}, where the scope represents a file, and \inlinecode{SUBMODULE}, where it represents a module tree scope.
 
-%\inlinecode{AddToModuleTree} does to a \inlinecode{ModuleTree} what \inlinecode{declareModule} tried to do: check if the submodule already exists, adding it to that submodule if it did, or creating the submodule if it didn't.
-%We do not run into the scope extension issue because it does not extend a scope, it just returns a new \inlinecode{ModuleTree}.
+\inlinecode{AddToModuleTree} does to a \inlinecode{ModuleTree} what \inlinecode{declareModule} tried to do: check if the submodule already exists, adding it to that submodule if it did, or creating the submodule if it didn't.
+We do not run into the scope extension issue because it does not extend a scope, it just returns a new \inlinecode{ModuleTree}.
 
 Finally, the moduleTree is instantiated.
 This is rather straightforward, the only thing to note is that each submodule in the tree creates a new scope, even if it already has a file scope.
 The reason for this is that a file scope cannot be extended, so it is not possible to add any submodules to the file scope.
-%Instead, the newly created tree scope has a \inlinecode{FILE} edge to the file scope.
+Instead, the newly created tree scope has a \inlinecode{FILE} edge to the file scope.
 
 
 
