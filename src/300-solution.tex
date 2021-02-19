@@ -27,24 +27,24 @@ This leads to the decision to create scopes for each submodule, and to declare s
 
 To declare the modules, the approach that matches the semantic model the most is a tree of submodules.
 The most straightforward way to create such a tree is adding modules one at a time by checking if the submodule already exists and creating it if it does not, in Statix code:
-%\blockcode{
-%declareModule : scope * list(MODID)
-%declareModule(s, []).
-%declareModule(s, [name|names]) :-
-%  getOrCreateModuleScope(s, name) == s_mod,
-%  declareModule(s_mod, names). // not allowed: declareModule may try to extend s_mod, but we do not have permission to extend it.
+\begin{verbatim}
+declareModule : scope * list(MODID)
+declareModule(s, []).
+declareModule(s, [name|names]) :-
+  getOrCreateModuleScope(s, name) == s_mod,
+  declareModule(s_mod, names). // not allowed: declareModule may try to extend s_mod, but we do not have permission to extend it.
 
-%getOrCreateModuleScope : scope * MODID -> scope
-%getOrCreateModuleScope(s, name) = s_mod:-
-%  query [...] |-> occs,
-%  getOrCreateModuleScope_1(s, occs, name) == s_mod.
-  
-%  getOrCreateModuleScope_1 : scope * (path * (MODID * scope)) * MODID
-%  getOrCreateModuleScope_1(s, [(_, (_, s_mod))], _) = s_mod. // submodule was already declared.
-%  getOrCreateModuleScope_1(s, [], name) = s_mod :- // submodule not declared yet, declare a new one
-%    new s_mod,
-%    !mod[name, s_mod] in s.
-%}
+getOrCreateModuleScope : scope * MODID -> scope
+getOrCreateModuleScope(s, name) = s_mod:-
+  query [...] |-> occs,
+  getOrCreateModuleScope_1(s, occs, name) == s_mod.
+
+  getOrCreateModuleScope_1 : scope * (path * (MODID * scope)) * MODID
+  getOrCreateModuleScope_1(s, [(_, (_, s_mod))], _) = s_mod. // submodule was already declared.
+  getOrCreateModuleScope_1(s, [], name) = s_mod :- // submodule not declared yet, declare a new one
+    new s_mod,
+    !mod[name, s_mod] in s.
+\end{verbatim}
 This is not allowed due to Statix semantics: only scopes that were passed down as an argument to the current function or that were created in the current function can be extended.
 
 Since the most straightforward approach does not work, there are a few alternatives to consider:
