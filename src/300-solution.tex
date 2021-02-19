@@ -27,7 +27,7 @@ This leads to the decision to create scopes for each submodule, and to declare s
 
 To declare the modules, the approach that matches the semantic model the most is a tree of submodules.
 The most straightforward way to create such a tree is adding modules one at a time by checking if the submodule already exists and creating it if it does not, in Statix code:
-\begin{verbatim}
+\begin{lstlisting}
 declareModule : scope * list(MODID)
 declareModule(s, []).
 declareModule(s, [name|names]) :-
@@ -44,7 +44,7 @@ getOrCreateModuleScope(s, name) = s_mod:-
   getOrCreateModuleScope_1(s, [], name) = s_mod :- // submodule not declared yet, declare a new one
     new s_mod,
     !mod[name, s_mod] in s.
-\end{verbatim}
+\end{lstlisting}
 This is not allowed due to Statix semantics: only scopes that were passed down as an argument to the current function or that were created in the current function can be extended.
 
 Since the most straightforward approach does not work, there are a few alternatives to consider:
