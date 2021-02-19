@@ -21,7 +21,7 @@ One part that was not trivial is the module system in the \ac{PIE} \ac{DSL}.
 The implementation in \ac{NaBL2} did not implement the full specification, but simply used an import edge to import modules. \todo{add an example?}
 The implementation in Statix does implement the full specification.
 Partial imports \todo{add code} in combination with renaming make the implementation of the module system non-trivial.
-%\inlinecode{renamed:sub:someFunc} should resolve, even if it is defined in a module \inlinecode{someModule:original_name:sub:someFunc}.
+\inlinecode{renamed:sub:someFunc} should resolve, even if it is defined in a module \inlinecode{someModule:original\_name:sub:someFunc}.
 This leads to the decision to create scopes for each submodule, and to declare submodules of the current module in the \inlinecode{mod} relation:
 \todo{create figure} % figure: `s { relations {mod : (module_name, s_mod)}}`
 
@@ -64,10 +64,10 @@ This means that I went for the first option: build a data structure that represe
 First of all, we want to create the representation of the module tree in the \inlinecode{projectOk} function.
 To do this, we first need a list of the modules to declare.
 This is not entirely trivial, because \inlinecode{projectOk} does not get a list of files.
-%To pass the modules to \inlinecode{projectOk}, we declare each module in a dedicated relation \inlinecode{mod_wip} in \inlinecode{programOk}.
+To pass the modules to \inlinecode{projectOk}, we declare each module in a dedicated relation \inlinecode{mod\_wip} in \inlinecode{programOk}.
 This relation is then queried by \inlinecode{projectOk} to get the list of modules.
 
-%The data structure representing the module tree uses two constructors: \inlinecode{ModuleTreeRoot : list(scope) * list(ModuleTree) -> ModuleTree} and \inlinecode{ModuleTreeNode : MODID * list(scope) * list(scope) * list(ModuleTree) -> ModuleTree}.
+The data structure representing the module tree uses two constructors: \inlinecode{ModuleTreeRoot : list(scope) * list(ModuleTree) -> ModuleTree} and \inlinecode{ModuleTreeNode : MODID * list(scope) * list(scope) * list(ModuleTree) -> ModuleTree}.
 The \inlinecode{ModuleTreeRoot} contains a list of file scopes and a list of submodules.
 A \inlinecode{ModuleTreeNode} has the name of the submodule, a list of file scopes, a list of tree scopes representing the same submodule, and a list of submodules.
 The function \inlinecode{addToModuleTree} adds a \inlinecode{MODULE} to a moduleTree.
