@@ -2,7 +2,6 @@
 
 \chapter{\label{chap:introduction}Introduction}
 
-\todo{short introduction: what is spoofax?}
 \todo{short introduction: what is PIE?}
 
 Using the PIE framework requires a lot of boilerplate.
@@ -12,21 +11,20 @@ The PIE DSL was created by Gabriël Konat in \todo{reference} as part of his wor
 This included a compiler from PIE DSL to Kotlin.
 For various reasons compiling to Kotlin was deemed undesirable, so Ivo Wilms implemented a compiler from the DSL to Java \todo{is there a reference? If not: add footnote to explain why}.
 
-\section{\label{sec:introduction__problem_statement}Problem statement}
 The PIE DSL was not [powerful|expressive|extensive] enough to be used in many real world use cases.
 The Java compiler implemented by used string interpolation, which (as it turned out) is "suboptimal" \footnote{it's severely limiting, don't do it}.
 
 Problems:
 \begin{enumerate}
-  \item Existing compilers are [bad]
+  \item Existing compilers are not satisfactory
   \begin{itemize}
      \item Compiler to Kotlin is outdated, compiling to Kotlin is undesirable.
      \item Compiler to Java compiles via string interpolation, which is very limiting.
    \end{itemize}
-  \item Single file only (does not scale to multi-language project setups, see [ref: case study database pipelines])
+  \item Single file only (does not scale to multi-language project setups)
   \item Expressiveness
   \begin{enumerate}
-    \item No way to express core concepts of PIE, e.g. Suppliers [also maybe Results]
+    \item No way to express core concepts of PIE, e.g. Suppliers and Results
     \item No way to declare injected values for tasks
   \end{enumerate}
 \end{enumerate}
@@ -41,14 +39,26 @@ Objectives
   \end{itemize}
 \end{itemize}
 
-\section{\label{sec:introduction__solution}Solution}
 \begin{enumerate}
   \item Implement a compiler that compiles to Java using Java ASTs
   \item Implement a module system
   \item Extend the old PIE DSL with new constructs
   \begin{enumerate}
     \item Add generics
-%    \item (If adding generics fails) Add \inlinecode{supplier<T>} construct
+    \item (If adding generics fails) Add \inlinecode{supplier<T>} construct
     \item Add context parameters construct
   \end{enumerate}
 \end{enumerate}
+
+Contributions:
+\begin{itemize}
+  \item new compiler
+  \item implemented static semantics in Statix
+  \item Add modules, context parameters (and generics?) to the PIE DSL
+  \item Evaluate the new DSL in three case studies:
+  \begin{itemize}
+    \item simple transformation from Tiger
+    \item database pipelines at Oracle
+    \item testing pipelines at Oracle
+  \end{itemize}
+\end{itemize}
