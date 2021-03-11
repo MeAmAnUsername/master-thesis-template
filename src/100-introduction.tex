@@ -2,6 +2,134 @@
 
 \chapter{\label{chap:introduction}Introduction}
 
+\todo{describe use case first? Summary: we want to run a pipeline in Spoofax, but we don't want to specify persistence and incrementality ad-hoc. This is what build systems do, but none of them are expressive and support precise dynamic dependencies}
+
+\Ac{PIE} is a build system that aims to allow expressing pipelines with dynamic dependencies with automatic persistence and incremental execution.
+It achieves this by being imperative rather than declarative: tasks can call other tasks.
+\Ac{PIE} consists of the PIE framework and the \ac{PIE} \ac{DSL}.
+The framework is an implementation of \ac{PIE} in Java.
+The \ac{DSL} is a language developed to create a concise specification of pipelines.
+The user can specify pipelines as functions that call each other.
+This \ac{PIE} \ac{DSL} code is then compiled to definitions in the Java framework by the \ac{PIE} compiler.
+The Java framework saves the inputs and corresponding outputs of tasks.
+If a task is called with inputs that are cached, the corresponding output is returned without executing the task.
+
+The Java framework keeps track of the task and file dependencies of tasks.
+When a file changes, it can use the dependency graph to keep track of things.
+
+\todo{British English or US English? (analyse vs analyze)}
+
+
+Language engineering is the discipline of designing and implementing programming languages.
+Spoofax is a language workbench, i.e.\ an IDE for designing and implementing programming languages.
+It brings tools from regular software development to language engineering, like syntax highlighting, static analysis and a testing framework.
+It allows a language developer to work on the specification of a language and have example programs of that language open at the same time.
+Spoofax will compile the language specification and parse and analyse the example programs, which allows the language developer to experiment with language features.
+The goal of Spoofax is to abstract over the implementation details of implementing a language.
+A language developer only has to declaratively specify the language, Spoofax will generate an implementation for a parser, static analyser, syntax highlighting and other editor tools.
+
+Generating these implementations uses pipelines.
+The grammar is specified in SDF3 files.
+These files are parsed using an SDF3 parse table included with Spoofax.
+The resulting ATerms are used to generate a parse table for the language under development, a syntax highlighter and signatures for Statix and Stratego.
+Much like SDF3, Statix files are parsed using the built-in Statix parse table, and the resulting ATerms are used to generate the static analyser.
+
+
+
+
+The Spoofax ecosystem includes several DSLs, like SDF3 to specify the grammar of a language, NaBL2 and Statix to specify the static semantics, and Stratego to specify program transformations. \todo{Can I assume that readers are familiar with language engineering in general? (i.e. they don't know Spoofax, but they do know what grammar, static semantics etc. are)}
+The specifications in these DSLs are combined into a language specification.
+This language specification is used by Spoofax to update open editors of the user language by parsing, analysing, syntax highlighting and showing errors.
+It can also be packaged into a plugin that does these things so that the user language can be used independently from Spoofax.
+
+All of these tasks have dependencies on the specification files, other files, each other and other tasks.
+Executing all tasks each time anything changes takes too long and is often not necessary: if an example program is updated, the language specification stays the same, so the language does not need to be rebuild.
+Only the editor for that example program (and possibly other editors if they depend on this one) need to be reparsed and re-analysed.
+The solution is incrementality: only execute the tasks with changed inputs.
+If the input stays the same, return the output from cache.
+
+Additionally, we don't want to rebuild the language each time we restart the IDE.
+
+
+\Ac{PIE} is a build system that aims to allow expressing pipelines with dynamic dependencies with automatic persistence and incremental execution.
+It achieves this by being imperative rather than declarative: tasks can call other tasks.
+\Ac{PIE} consists of the PIE framework and the \ac{PIE} \ac{DSL}.
+The framework is an implementation of \ac{PIE} in Java.
+The \ac{DSL} is a language developed to create a concise specification of pipelines.
+The user can specify pipelines as functions that call each other.
+This \ac{PIE} \ac{DSL} code is then compiled to definitions in the Java framework by the \ac{PIE} compiler.
+The Java framework saves the inputs and corresponding outputs of tasks.
+If a task is called with inputs that are cached, the corresponding output is returned without executing the task.
+
+The Java framework keeps track of the task and file dependencies of tasks.
+When a file changes, it can use the dependency graph to keep track of things.
+
+The PIE DSL is a language for expressing pipelines.
+Pipelines are expressed as functions that call other functions.
+While the DSL and the compiler did work, they also had several shortcomings:
+\begin{enumerate}
+  \item Existing compilers were not maintainable.
+  \item Does not scale to larger projects, e.g. projects that consist of multiple language projects.
+  \item Implemented in NaBL2, which has a few limitations in expressiveness.
+  \item Limitations in expressiveness of the PIE DSL.
+  \begin{enumerate}
+    \item No way to express core concepts of PIE, e.g. Suppliers and Results.
+    \item No way to declare injected values for tasks.
+  \end{enumerate}
+\end{enumerate}
+
+
+
+
+What am I doing?
+> Improving the DSL (includes the PIE compiler)
+Why am I doing that?
+> So that the case studies (and hopefully other things) will run
+Why do we want the case studies to run?
+> To prove that the PIE DSL (and PIE in general) works
+> Because we want to do these things with PIE
+What are "these things"?
+> Execute pipelines. In our case, mostly Spoofax pipelines
+What is Spoofax?
+> A language workbench, including meta-DSLs for common language engineering aspects.
+What is a language workbench?
+> IDE for implementing (and designing?) programming languages
+What is a meta-DSL?
+> DSL for specifying some aspect of programming languages (e.g. SDF3 to specify the grammar of a language)
+What are Spoofax pipelines?
+> Building languages
+> Updating editor windows
+   - from meta-DSLs
+   - from user DSL
+Why do we want to do these things with PIE?
+> Because the existing build systems do not support everything we need (expressiveness, conciseness, precision, dynamic dependencies, incremental builds, automatic persistence)
+Why do we need those properties?
+> Expressiveness and conciseness to make the code easier to write, easier to iterate, more maintainable and less likely to contain bugs
+> Precision to avoid overapproximation and underapproximation
+  > underapproximation: avoid errors from using outdated outputs
+  > overapproximation: save time by only building the things that are outdated
+> Dynamic dependencies because not all dependencies are known statically (e.g. file extension for example files is defined in esv file)
+> Incremental builds to save time (don't rebuild things that are still up to date)
+> Automatic persistence
+   > Persistence: don't rebuild on restart, persist the results to disk.
+   > Automatic: don't burden the pipeline developer with persistence, it is error prone, tedious and verbose.
+
+
+Definitions:
+- language specification: the files specifying a language (i.e. SDF3, NaBL2/Statix)
+- language specification: the files that result from building a language.
+- PIE: the idea for how to execute a build system and the framework and DSL implementing that idea.
+- framework: the Java framework that implements PIE
+- PIE DSL / DSL: The PIE DSL
+- PIE compiler / compiler: the compiler that compiles PIE DSL to Java
+- expressive: Able to express a concept at all
+- expressive: Able to express a concept concisely
+
+
+
+
+
+
 \todo{short introduction: what is PIE?}
 
 Using the PIE framework requires a lot of boilerplate.
@@ -14,20 +142,6 @@ For various reasons compiling to Kotlin was deemed undesirable, so I implemented
 The PIE DSL was not [powerful|expressive|extensive] enough to be used in many real world use cases.
 The Java compiler implemented used string interpolation, which (as it turned out) is "suboptimal" \footnote{it's severely limiting, don't do it}.
 
-Problems:
-\begin{enumerate}
-  \item Existing compilers are not satisfactory
-  \begin{itemize}
-     \item Compiler to Kotlin is outdated, compiling to Kotlin is undesirable.
-     \item Compiler to Java compiles via string interpolation, which is very limiting.
-   \end{itemize}
-  \item Single file only (does not scale to multi-language project setups)
-  \item Expressiveness
-  \begin{enumerate}
-    \item No way to express core concepts of PIE, e.g. Suppliers and Results
-    \item No way to declare injected values for tasks
-  \end{enumerate}
-\end{enumerate}
 
 Objectives
 \begin{itemize}
@@ -37,6 +151,8 @@ Objectives
     \item It could also compile to another language if another compiler and PIE framework were written in that language.
     \item It should work for pipelines in general, not just Spoofax pipelines.
   \end{itemize}
+  \item Since PIE is meant to give realtime feedback in Spoofax, it should be reasonably performant
+  \item Keep the PIE DSL extendable. Do not add features that are incompatible with future extensions of the language where this is reasonably possible.
 \end{itemize}
 
 \begin{enumerate}
