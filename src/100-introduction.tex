@@ -17,22 +17,39 @@ If a task is called with inputs that are cached, the corresponding output is ret
 The Java framework keeps track of the task and file dependencies of tasks.
 When a file changes, it can use the dependency graph to keep track of things.
 
-\todo{British English or US English? (analyse vs analyze)}
+\todo{Set editor to US English}
+
 
 
 Language engineering is the discipline of designing and implementing programming languages.
 Spoofax is a language workbench, i.e.\ an IDE for designing and implementing programming languages.
-It brings tools from regular software development to language engineering, like syntax highlighting, static analysis and a testing framework.
+It brings tools that exist in regular software development to language engineering, like syntax highlighting, static analysis and a testing framework.
 It allows a language developer to work on the specification of a language and have example programs of that language open at the same time.
+This allows the language developer to get immediate feedback on their changes.
 Spoofax will compile the language specification and parse and analyse the example programs, which allows the language developer to experiment with language features.
 The goal of Spoofax is to abstract over the implementation details of implementing a language.
 A language developer only has to declaratively specify the language, Spoofax will generate an implementation for a parser, static analyser, syntax highlighting and other editor tools.
 
-Generating these implementations uses pipelines.
-The grammar is specified in SDF3 files.
-These files are parsed using an SDF3 parse table included with Spoofax.
-The resulting ATerms are used to generate a parse table for the language under development, a syntax highlighter and signatures for Statix and Stratego.
-Much like SDF3, Statix files are parsed using the built-in Statix parse table, and the resulting ATerms are used to generate the static analyser.
+Generating these implementations uses a combination of external binary programs and Java functions.
+These programs and functions have dependencies on files and each other's outputs.
+This means that they form pipelines.
+Because Spoofax is an IDE, we would like it to give quick feedback when a language developer makes small changes to the code.
+However, executing the entire pipeline is really slow (in the order of minutes).
+This means that executing the entire pipeline is not an option.
+Instead, results are cached and recomputed when the output changes; this is called incrementality.
+In the beginning, this was done ad-hoc: every program and Java function would have its own implementation for incrementality and persistence \todo{explain persistence before here}.
+This turned out to be hard to maintain: caching is already colloquially known to be one of the "fundamental problems of computer science", so reinventing the wheel each time leads to a lot of bugs.
+
+The problem of incrementally executing programs and functions in the right order already has a solution: a build system.
+Unfortunately, existing build systems did not have all features required for Spoofax pipelines.
+In particular, many build systems do not support dynamic dependencies.
+Dynamic dependencies are dependencies that are not known until runtime.
+A well known example are C header files: it is impossible to know what header files a particular C file depends on until you parse it.
+The common solution is to overapproximate the dependency: make each C file depend on \emph{every} header file.
+While this makes sure that every change is picked up on by the build system, it also means that every time a header file is changed, \emph{all} C files are considered out of date, even if few or even none of those C files depend on that particular header.
+
+To solve this, dependencies should be precise: by keeping precise track of dependencies for every task
+
 
 
 
@@ -108,7 +125,7 @@ Why do we need those properties?
 > Precision to avoid overapproximation and underapproximation
   > underapproximation: avoid errors from using outdated outputs
   > overapproximation: save time by only building the things that are outdated
-> Dynamic dependencies because not all dependencies are known statically (e.g. file extension for example files is defined in esv file)
+> Dynamic dependencies because not all dependencies are known statically (e.g. file extension for example files is defined in esv file, language under test is defined within SPT file, project dependencies are declared in .yaml file)
 > Incremental builds to save time (don't rebuild things that are still up to date)
 > Automatic persistence
    > Persistence: don't rebuild on restart, persist the results to disk.
