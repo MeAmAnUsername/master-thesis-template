@@ -58,7 +58,7 @@ In the end, we made the following contributions:
 # Problem analysis
 
 - Use case: Spoofax pipelines
-  - What is Spoofax?
   - What is language development?
+  - What is Spoofax? (also explains the Spoofax Ecosystem, e.g. SDF3, NaBL2, Statix, Stratego)
   - What are pipelines that we want to express with the PIE DSL?
-- 
+- More detailed explanations of the problems
