@@ -132,6 +132,49 @@ While the DSL and the compiler did work, they also had several shortcomings:
 }
 
 \subsection{Problems}
+\todo{Should I talk about these problems in the present tense or past tense? ("The PIE DSL cannot express ..." vs. "The PIE DSL could not express ...")}
+The problems with the PIE DSL fall under two categories.
+There are problems with the language design and problems with the language implementation.
+
+\subsubsection{Lack of scalability}
+A PIE program used to be written entirely in a single file, referring to other files was not possible.
+In Spoofax, we want one PIE file per language project, PIE is limited to a single language project at a time.
+In practice, compilers often need at least two language projects: a language project with the target language and a language project with the source language.
+The compiler code itself is then either included in the source language or defined in a separate third language project.
+Finally, a project could just consist of multiple projects.
+An example is the Green-Marl compiler, which is one of the case studies (see \todo{add reference to Green-Marl pipelines case study}).
+In conclusion, we want a principled way to refer to other PIE files in order to use PIE in bigger projects with multiple languages.
+
+\subsubsection{Limitations in expressiveness}
+The PIE framework is under active development.
+This sometimes adds new requirements on things to express using the PIE DSL.
+
+At the start of the thesis, the PIE framework used to throw exceptions to signal pipeline failure.
+Checked exceptions in Java hurt composability of tasks, because checked exceptions from dependencies either need to be declared or caught.
+Throwing exceptions to signal pipeline failure also has some semantic issues: exceptions are meant to signify an exceptional condition.
+Malformed input is not unexpected, so this should not lead to an exception.
+To solve this, the PIE framework switched to encoding the status of a task in its return value.
+While a task can encode this in any way it likes, the standard way in PIE is to use the provided library class Result<T, E> that encodes either success with a normal value T or failure with an exception E.
+These results are [composable]: a task can take a result and either do some computation if it has a value, or just pass along the exception if it had an exception.
+This allows easy composition of tasks, where one only needs to check the final result for success or failure.
+While this undoubtedly improves the PIE framework, it presents a problem for the PIE DSL: it now needs to support Result, and other generic library classes like Supplier<T>, Option<T>, <TODO: more examples?>.
+Additionally, it would be good if the PIE DSL could interoperate with generic classes in general. \todo{explain how foreign imports work in PIE and why that does prohibits interoperating with generic classes}
+
+The other new requirement from the DSL stems from a property of tasks: not everything that is required to execute a task is an argument.
+Sometimes values are hardcoded into the task.
+An example is the StrategoRuntime that is used to execute Stratego strategies.
+This runtime is specific to each language and is added to the task as an instance variable.
+The PIE DSL did not have any way to specify such an instance variable.
+
+We would like to extend the language with new syntax and semantics in order to handle these uses.
+
+\subsubsection{NaBL2 limits static semantics}
+As mentioned in the previous problem, \todo{add reference} the PIE DSL could not interoperate with generic classes in Java.
+The simplest solution is to add support for generic classes to PIE DSL as well.
+However, PIE DSL is implemented using NaBL2.
+NaBL2 does not have the power/expressiveness to allow implementing generics.
+Furthermore, NaBL2 has limited static error reporting and limited ways to provide debugging information in case of runtime errors, which makes development in NaBL2 tedious.
+
 \subsubsection{Compiler}
 The PIE DSL had two compilers.
 The first one compiled to Kotlin.
@@ -149,40 +192,3 @@ The Stratego compiler can catch typos in constructor names, but it does not chec
 
 All this leads to two requirements for the compiler: it needs to compile to something that is already used in the Spoofax ecosystem (i.e. Java or bytecode) and it needs to compile to an AST.
 
-\subsubsection{Lack of scalability}
-A PIE program used to be written entirely in a single file, referring to other files was not possible.
-In Spoofax, we want one PIE file per language project, PIE is limitied to a single language project at a time.
-In practice, compilers often need at least two language projects: a language project with the target language and a language project with the source language.
-The compiler code itself is then either included in the source language or defined in a separate third language project.
-Finally, a project could just consist of multiple projects.
-An example is the Green-Marl compiler, which is one of the case studies (see \todo{add reference to Green-Marl pipelines case study}).
-In conclusion, we want a principled way to refer to other PIE files in order to use PIE in bigger projects with multiple languages.
-
-\subsubsection{NaBL2 limits static semantics}
-At the start of the thesis, the PIE framework used to throw exceptions to signal pipeline failure.
-Checked exceptions in Java hurt composability of tasks, because checked exceptions from dependencies either need to be declared or caught.
-Throwing exceptions to signal pipeline failure also has some semantic issues: exceptions are meant to signify an exceptional condition.
-Malformed input is not unexpected, so this should not lead to an exception.
-To solve this, the PIE framework switched to encoding the status of a task in its return value.
-While a task can encode this in any way it likes, the standard way in PIE is to use the provided library class Result<T, E> that encodes either success with a normal value T or failure with an exception E.
-These results are [composable]: a task can take a result and either do some computation if it has a value, or just pass along the exception if it had an exception.
-This allows easy composition of tasks, where one only needs to check the final result for success or failure.
-While this undoubtedly improves the PIE framework, it presents a problem for the PIE DSL: it now needs to support Result, and other generic library classes like Supplier<T>, Option<T>, <TODO: more examples?>.
-Additionally, it would be good if the PIE DSL could interoperate with generic classes in general. \todo{explain how foreign imports work in PIE and why that does prohibits interoperating with generic classes}
-The simplest solution is to add support for generic classes to PIE DSL as well.
-However, PIE DSL is implemented using NaBL2.
-NaBL2 does not have the power/expressiveness to allow implementing generics.
-Furthermore, NaBL2 has limited static error reporting and limited ways to provide debugging information in case of runtime errors, which makes development in NaBL2 tedious.
-
-\subsubsection{Limitations in expressiveness}
-The PIE framework is under active development.
-This sometimes adds new requirements on things to express using the PIE DSL.
-One was already mentioned in <ref: NaBL2 limits static semantics>: there is no way to interoperate with generic classes like Supplier<T> and Result<T, E>.
-
-The other issue stems from a property of tasks: not everything that is required to execute a task is an argument.
-Sometimes values are hardcoded into the task.
-An example is the StrategoRuntime that is used to execute Stratego strategies.
-This runtime is specific to each language and is added to the task as an instance variable.
-The PIE DSL did not have any way to specify such an instance variable.
-
-We would like to extend the language with new syntax and semantics in order to handle these uses.
