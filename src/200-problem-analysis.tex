@@ -123,13 +123,37 @@ While the DSL and the compiler did work, they also had several shortcomings:
 
 \subsection{Background information}
 \todo{Explain:
+- how are ASTs represented in Spoofax?
 - compilation by string interpolation?
 - compilation with Stratego
-- how are ASTs represented in Spoofax?
 - Spoofax project setups: what are language projects?
 - PIE DSL: foreign imports
 - why can't PIE DSL interoperate with generic classes?
 }
+
+\subsubsection{ATerms}
+
+
+\subsubsection{Ways to compile}
+There are two ways to compile from a source language to a target language.
+
+The simplest way to compile a source language to a target language is to compile fragments of the source language into fragments of the target language, write a template in the target language and insert the compiled fragments into that template.
+This method is called string interpolation.
+It has the advantage of being fairly easy to read and write, but it has several disadvantages.
+A major disadvantage of string compilation is that it does not have static checks.
+This means that the Stratego compiler \todo{general term for "compiler compiler"} does not check that the generated code will form a correct program, or even that it is syntactically correct.
+A simple typo in the generated code is only caught at runtime instead of compile time.
+This leads to longer development times and transformation rules that are tested on a small subset of possible inputs, instead of verified for all possible inputs.
+String interpolation is also inefficient in case one wants to do some post-processing on the generated code, such as performing optimizations.
+To perform such optimizations, the code needs to be parsed to an AST, so concatenating strings only to then parse the strings is inefficient.
+
+To avoid bugs due to typos in the generated code fragments, one can transform to an AST of the target language instead.
+The AST is then tranformed to code by a generated prettyprinter.
+Additionally, it is easier to check correctness of an AST.
+Stratego currently verifies the arity of constructors.
+Verifying the arguments to a constructor are of the right type (e.g. checking that \inlinecode{x} and \inlinecode{y} in \inlinecode{Add(x, y)} are expressions instead of, say, import statements) is currently a work in progress.
+Transforming to an AST also means that the transformed program is immediately ready for post-processing, no parsing required.
+
 
 \subsection{Problems}
 \todo{Should I talk about these problems in the present tense or past tense? ("The PIE DSL cannot express ..." vs. "The PIE DSL could not express ...")}
