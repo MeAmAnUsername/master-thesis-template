@@ -139,7 +139,6 @@ An ATerm consists of a constructor, arguments and possibly some annotations.
 As an example, the expression \inlinecode{x * 9 - 3} is represented as \inlinecode{Minus(Times(Var("x"), Int("9")), Int("3"))}.
 Spoofax meta-languages can pattern-match on these constructors to define rules, such as rules in Stratego to transform a constructor or rules in Statix to define the static semantics.
 
-
 \subsubsection{Ways to compile}
 There are two ways to compile from a source language to a target language.
 
