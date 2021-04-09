@@ -132,6 +132,12 @@ While the DSL and the compiler did work, they also had several shortcomings:
 }
 
 \subsubsection{ATerms}
+Programs are expressed in human readable syntax, but this is hard and inefficient to manipulate directly.
+Instead, code is parsed to an AST, which throws away the syntax and keeps the parts of a program that can change.
+In Spoofax, these ASTs are represented using ATerms.
+An ATerm consists of a constructor, arguments and possibly some annotations.
+As an example, the expression \inlinecode{x * 9 - 3} is represented as \inlinecode{Minus(Times(Var("x"), Int("9")), Int("3"))}.
+Spoofax meta-languages can pattern-match on these constructors to define rules, such as rules in Stratego to transform a constructor or rules in Statix to define the static semantics.
 
 
 \subsubsection{Ways to compile}
