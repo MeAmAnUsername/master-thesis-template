@@ -1,6 +1,7 @@
 % !TEX root = document.tex
 
-\chapter{\label{chap:problem_analysis}Problem analysis}
+\section{Problem analysis}
+\label{sec:problem_analysis}
 
 TODO: In this chapter:
 \begin{itemize}
@@ -122,6 +123,8 @@ While the DSL and the compiler did work, they also had several shortcomings:
 
 
 \subsection{Background information}
+\label{subsec:problem_analysis__background}
+
 \todo{Explain:
 - how are ASTs represented in Spoofax?
 - compilation by string interpolation?
@@ -132,6 +135,8 @@ While the DSL and the compiler did work, they also had several shortcomings:
 }
 
 \subsubsection{ATerms}
+\label{subsubsec:problem_analysis__background__aterms}
+
 Programs are expressed in human readable syntax, but this is hard and inefficient to manipulate directly.
 Instead, code is parsed to an AST, which throws away the syntax and keeps the parts of a program that can change.
 In Spoofax, these ASTs are represented using ATerms.
@@ -140,6 +145,8 @@ As an example, the expression \inlinecode{x * 9 - 3} is represented as \inlineco
 Spoofax meta-languages can pattern-match on these constructors to define rules, such as rules in Stratego to transform a constructor or rules in Statix to define the static semantics.
 
 \subsubsection{Ways to compile}
+\label{subsubsec:problem_analysis__background__ways_to_compile}
+
 There are two ways to compile from a source language to a target language.
 
 The simplest way to compile a source language to a target language is to compile fragments of the source language into fragments of the target language, write a template in the target language and insert the compiled fragments into that template.
@@ -159,7 +166,9 @@ Stratego currently verifies the arity of constructors.
 Verifying the arguments to a constructor are of the right type (e.g. checking that \inlinecode{x} and \inlinecode{y} in \inlinecode{Add(x, y)} are expressions instead of, say, import statements) is currently a work in progress.
 Transforming to an AST also means that the transformed program is immediately ready for post-processing, no parsing required.
 
-\subsubsection{compilation with Stratego}
+\subsubsection{Compilation with Stratego}
+\label{subsubsec:problem_analysis__background__stratego}
+
 Stratego is a meta-language to express program transformations.
 Examples are optimizations \inlinecode{5 + x + 10 * x + 8} to \inlinecode{18 + 11 * x}) and compiling one language to another: \inlinecode{for (int i = 0; i<10; i++) \{...\}} to \inlinecode{for i in 0..9: ...}.
 Stratego uses rules to define transformations from one constructor to another.
@@ -189,11 +198,15 @@ This first applies the rule to the subterms to produce \inlinecode{If(True(), Pr
 
 
 \subsection{Problems}
+\label{subsec:problem_analysis__problems}
+
 \todo{Should I talk about these problems in the present tense or past tense? ("The PIE DSL cannot express ..." vs. "The PIE DSL could not express ...")}
 The problems with the PIE DSL fall under two categories.
 There are problems with the language design and problems with the language implementation.
 
 \subsubsection{Lack of scalability}
+\label{subsubsec:problem_analysis__problems__scalability}
+
 A PIE program used to be written entirely in a single file, referring to other files was not possible.
 In Spoofax, we want one PIE file per language project, PIE is limited to a single language project at a time.
 In practice, compilers often need at least two language projects: a language project with the target language and a language project with the source language.
@@ -203,6 +216,8 @@ An example is the Green-Marl compiler, which is one of the case studies (see \to
 In conclusion, we want a principled way to refer to other PIE files in order to use PIE in bigger projects with multiple languages.
 
 \subsubsection{Limitations in expressiveness}
+\label{subsubsec:problem_analysis__problems__expressiveness}
+
 The PIE framework is under active development.
 This sometimes adds new requirements on things to express using the PIE DSL.
 
@@ -226,6 +241,8 @@ The PIE DSL did not have any way to specify such an instance variable.
 We would like to extend the language with new syntax and semantics in order to handle these uses.
 
 \subsubsection{NaBL2 limits static semantics}
+\label{subsubsec:problem_analysis__problems__nabl2}
+
 As mentioned in the previous problem, \todo{add reference} the PIE DSL could not interoperate with generic classes in Java.
 The simplest solution is to add support for generic classes to PIE DSL as well.
 However, PIE DSL is implemented using NaBL2.
@@ -233,6 +250,8 @@ NaBL2 does not have the power/expressiveness to allow implementing generics.
 Furthermore, NaBL2 has limited static error reporting and limited ways to provide debugging information in case of runtime errors, which makes development in NaBL2 tedious.
 
 \subsubsection{Compiler}
+\label{subsubsec:problem_analysis__problems__compiler}
+
 The PIE DSL had two compilers.
 The first one compiled to Kotlin.
 Kotlin is a language that gets compiled to bytecode for the JVM, which means that it can interoperate with Java and thus with the PIE framework.
