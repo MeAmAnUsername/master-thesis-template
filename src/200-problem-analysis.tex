@@ -50,9 +50,9 @@ Spoofax is a language workbench, i.e.\ an IDE for designing and implementing pro
 It brings tools that exist in regular software development to language engineering, like syntax highlighting, static analysis and a testing framework.
 It allows a language developer to work on the specification of a language and have example programs of that language open at the same time.
 This allows the language developer to get immediate feedback on their changes.
-Spoofax will compile the language specification and parse and analyse the example programs, which allows the language developer to experiment with language features.
+Spoofax will compile the language specification and parse and analyze the example programs, which allows the language developer to experiment with language features.
 The goal of Spoofax is to abstract over the implementation details of implementing a language.
-A language developer only has to declaratively specify the language, Spoofax will generate an implementation for a parser, static analyser, syntax highlighting and other editor tools.
+A language developer only has to declaratively specify the language, Spoofax will generate an implementation for a parser, static analyzer, syntax highlighting and other editor tools.
 
 Generating these implementations uses a combination of external binary programs and Java functions.
 These programs and functions have dependencies on files and each other's outputs.
@@ -80,12 +80,12 @@ To solve this, dependencies should be precise: by keeping precise track of depen
 
 The Spoofax ecosystem includes several DSLs, like SDF3 to specify the grammar of a language, NaBL2 and Statix to specify the static semantics, and Stratego to specify program transformations. \todo{Can I assume that readers are familiar with language engineering in general? (i.e. they don't know Spoofax, but they do know what grammar, static semantics etc. are)}
 The specifications in these DSLs are combined into a language specification.
-This language specification is used by Spoofax to update open editors of the user language by parsing, analysing, syntax highlighting and showing errors.
+This language specification is used by Spoofax to update open editors of the user language by parsing, analyzing, syntax highlighting and showing errors.
 It can also be packaged into a plugin that does these things so that the user language can be used independently from Spoofax.
 
 All of these tasks have dependencies on the specification files, other files, each other and other tasks.
 Executing all tasks each time anything changes takes too long and is often not necessary: if an example program is updated, the language specification stays the same, so the language does not need to be rebuild.
-Only the editor for that example program (and possibly other editors if they depend on this one) need to be reparsed and re-analysed.
+Only the editor for that example program (and possibly other editors if they depend on this one) need to be re-parsed and re-analyzed.
 The solution is incrementality: only execute the tasks with changed inputs.
 If the input stays the same, return the output from cache.
 
@@ -168,12 +168,25 @@ There can be multiple rules with the same name.
 Stratego will try them until one of them succeeds or all failed.
 This is like an implicit pattern match against constructors:
 \begin{lstlisting}
-  to-normal-form: For(e1, cond, e2, body) -> Block(e1, While(cond, Block(body, e2)))
-  to-normal-form: DoWhile(body, cond) -> Block(body, While(cond, body))
-  to-normal-form: DoUntil(body, cond) -> Block(body, While(Not(cond), body))
+  fold-constants: And(True(), e2) -> e2
+  fold-constants: And(False(), _) -> False()
+  fold-constants: And(e1, True()) -> e1
+  // No And(e1, False()) -> False() because that changes semantics, it won't execute e1 anymore
+  fold-constants: If(True(), body_true, _) -> body_true
+  fold-constants: If(False(), _, body_false) -> body_false
 \end{lstlisting}
 
-todo: Stratego applies rules using strategies
+The \inlinecode{fold-constants} rule above will perform constant folding on booleans and if statements where the condition is a constant.
+However, if we apply this rule to the term \inlinecode{If(And(True(), True()), Print("It's true"), Print("It's false"))}, it fails.
+The \inlinecode{And} constructors don't match because the top level constructor is \inlinecode{If}.
+And the \inlinecode{If} constructors don't match because the condition is neither \inlinecode{True()} nor \inlinecode{False()}, it is \inlinecode{And(...)}.
+
+What we want instead, is to apply this rule to any matching subterm of the \ac{AST}.
+To do this, Stratego has strategies.
+A strategy defines how to apply a rule to an AST.
+In this case, we can try to apply it to all subterms: \inlinecode{bottomup(try((fold-constants))}.
+This first applies the rule to the subterms to produce \inlinecode{If(True(), Print("It's true"), Print("It's false"))}, and then apply the rule to the term itself to produce the final result \inlinecode{Print("It's true")}.
+
 
 \subsection{Problems}
 \todo{Should I talk about these problems in the present tense or past tense? ("The PIE DSL cannot express ..." vs. "The PIE DSL could not express ...")}
