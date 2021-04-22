@@ -125,8 +125,8 @@ While the DSL and the compiler did work, they also had several shortcomings:
 \todo{Explain:
 - how are ASTs represented in Spoofax?
 - compilation by string interpolation?
-- compilation with Stratego
 - Spoofax project setups: what are language projects?
+- compilation with Stratego
 - PIE DSL: foreign imports
 - why can't PIE DSL interoperate with generic classes?
 }
@@ -153,12 +153,27 @@ String interpolation is also inefficient in case one wants to do some post-proce
 To perform such optimizations, the code needs to be parsed to an AST, so concatenating strings only to then parse the strings is inefficient.
 
 To avoid bugs due to typos in the generated code fragments, one can transform to an AST of the target language instead.
-The AST is then tranformed to code by a generated prettyprinter.
+The AST is then transformed to code by a generated prettyprinter.
 Additionally, it is easier to check correctness of an AST.
 Stratego currently verifies the arity of constructors.
 Verifying the arguments to a constructor are of the right type (e.g. checking that \inlinecode{x} and \inlinecode{y} in \inlinecode{Add(x, y)} are expressions instead of, say, import statements) is currently a work in progress.
 Transforming to an AST also means that the transformed program is immediately ready for post-processing, no parsing required.
 
+\subsubsection{compilation with Stratego}
+Stratego is a meta-language to express program transformations.
+Examples are optimizations \inlinecode{5 + x + 10 * x + 8} to \inlinecode{18 + 11 * x}) and compiling one language to another: \inlinecode{for (int i = 0; i<10; i++) \{...\}} to \inlinecode{for i in 0..9: ...}.
+Stratego uses rules to define transformations from one constructor to another.
+For example, the following rule combines two integer literals into a single value: \inlinecode{add-literal-ints: Plus(Int(x), Int(y)) -> Int(x + y)}.
+There can be multiple rules with the same name.
+Stratego will try them until one of them succeeds or all failed.
+This is like an implicit pattern match against constructors:
+\begin{lstlisting}
+  to-normal-form: For(e1, cond, e2, body) -> Block(e1, While(cond, Block(body, e2)))
+  to-normal-form: DoWhile(body, cond) -> Block(body, While(cond, body))
+  to-normal-form: DoUntil(body, cond) -> Block(body, While(Not(cond), body))
+\end{lstlisting}
+
+todo: Stratego applies rules using strategies
 
 \subsection{Problems}
 \todo{Should I talk about these problems in the present tense or past tense? ("The PIE DSL cannot express ..." vs. "The PIE DSL could not express ...")}
