@@ -47,5 +47,13 @@
       "-q"
   ],
   "latex-workshop.latex.outDir": "../",
-  "html.format.wrapLineLength": 100
+"html.format.wrapLineLength": 100,
+"spellright.language": [
+    "en"
+],
+"spellright.documentTypes": [
+    "markdown",
+    "latex",
+    "plaintext"
+]
 }
