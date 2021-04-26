@@ -37,31 +37,30 @@ Keeping Spoofax editors up-to-date follows a pipeline.
   These can be used by menu actions, for example when compiling to another language.
 \end{enumerate}
 
-Spoofax editors and actions have many dependencies \question{Change to / include a dependency graph?}
-\begin{itemize}
-  \item The language specification editors have a dependency on the parse table and static analysis from their respective meta-DSL.
-  These are included in the Spoofax distribution.
-  \item Building a language implementation has dependencies on the language specification files, on the compilers for the meta-DSLs, and on some configuration files.
-  \item Editors for example files have many dependencies:
-  \begin{itemize}
-    \item The parse table is used to parse the file.
-    This produces an ATerm. \question{not explained yet, refer to future section or use AST for now?}
-    \item Static analysis uses some build artifacts from the static semantics specification to analyze the ATerm produced by parsing.
-    \item Syntax highlighting uses the parse table and some additional configuration settings and the ATerm.
-  \end{itemize}
-  \item SPT also depends on the same things as the example editors, except for the syntax highlighting.
-  The language under test is specified within each SPT file, so the language that an SPT file requires cannot be determined until after it has been parsed: dependencies are dynamic, not static.
-\end{itemize}
-
-Because Spoofax is an IDE, language developers expect it to update in real time as they are typing.
+Because Spoofax is an IDE, language developers expect it to update as they are typing.
 This means that Spoofax needs to run editor services as fast as possible, preferably within a second.
 This is not always possible.
 Building a language specification to update example programs when a specification file is updated takes longer than a second for larger languages.
 Nevertheless, if the specification is unchanged and edits were only made to an example file, parsing, syntax highlighting and static analysis need to run.
 In this case, the language specification is unchanged and so does not need to be rebuild.
+Instead, the build artifacts can be cached and reused.
 Keeping track of which dependencies changed and only rerunning tasks that need updating is the task of the build system.
-For the next major version of Spoofax, Spoofax 3, the build system will be PIE.
 
+The current build system, Pluto, uses files as inputs and outputs for tasks.
+This implicitly means that files can be used as caches, Pluto only needs to keep track of which file is up to date (which I suppose it could do by checking the modification timestamp, but I don't know enough about the internals of Pluto to give a definitive answer \question{Do you know this?}).
+Reading and writing was left up to the pipeline developers, which meant that every task needs to implement its own file writing and reading.
+Additionally, files systems are different across \acp{OS}.
+As an example, Windows requires that file paths are at most 260 characters long.
+If the project is already inside a deeply nested folder, sometimes files simply cannot be generated without intentionally shortening the name, which introduces complexity.
+So every task needs to write robust code or needs some out of framework way to share such robust code.
+This lead to duplicate effort and a higher probability of bugs.
+
+The next major version of Spoofax, Spoofax 3, will use PIE as its build system.
+\Ac{PIE} includes caching out of the box.
+Tasks are Java classes that implement an interface which basically specifies that they have a method \inlinecode{exec}.
+The inputs and outputs of this method are automatically cached by the \ac{PIE} framework.
+It saves the inputs and corresponding outputs as a database in a single file, which avoids many of the issues with files.
+It also means that the pipeline developer need not concern themselves with caching.
 
 \subsection{Background information}
 \label{subsec:problem_analysis__background}
