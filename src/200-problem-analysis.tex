@@ -23,6 +23,20 @@ Testing frameworks and unit tests address this in regular software development.
 Spoofax includes SPT, a meta-DSL and framework for testing a language specification.
 SPT is mostly useful to perform regression testing, but it also serves as documentation on how the language is supposed to work and it encourages one to think about edge cases.
 
+Keeping Spoofax editors up-to-date follows a pipeline.
+\begin{enumerate}
+  \item The file is parsed, using the parse table.
+  In the case of meta-\acp{DSL}, the parse table is included with Spoofax.
+  For user-defined languages (e.g. the language currently under development), the parse table is a build artifact.
+  This step produces an ATerm of the file\question{not explained yet, refer to future section or use AST for now?} and notes, warnings and errors.
+  \item Syntax highlighting is added to the file using the parse results in the ATerm, generated colors from the grammar and custom colorings defined in configuration files.
+  \item Depending on configuration, static analysis is performed on either only the ATerm for this file or the ATerms from all files in this language within the project.
+  The specific semantics to apply are defined in artifacts from the language implementation.
+  This produces notes, warnings and errors markers which are added to the editor.
+  It also produces analysis results.
+  These can be used by menu actions, for example when compiling to another language.
+\end{enumerate}
+
 Spoofax editors and actions have many dependencies \question{Change to / include a dependency graph?}
 \begin{itemize}
   \item The language specification editors have a dependency on the parse table and static analysis from their respective meta-DSL.
