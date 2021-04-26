@@ -3,6 +3,52 @@
 \section{Problem analysis}
 \label{sec:problem_analysis}
 
+\subsection{Use case}
+\label{subsec:problem_analysis__use_case}
+
+Language engineering is the discipline of designing and implementing programming languages.
+The state of the art right now is to implement languages ad-hoc, i.e.\ most major languages implement most of their parsing, syntax highlighting, static analysis, etc. from scratch.\todo{add reference}
+A language workbench is an \ac{IDE} for developing programming languages.
+Integrating relevant tools into the editor makes it easier to implement a language, which in turn makes it easier to iterate and experiment with language design.
+
+Spoofax is a language workbench with the goal of abstracting over the implementation details of a language, and allowing language developers to focus solely on the design of their language, instead of how it should be implemented.
+It does this using multiple declarative meta-\acp{DSL}.
+The language developer can write a specification of their language in these \acp{DSL} and Spoofax automatically builds an implementation from these specifications.
+
+Spoofax allows language developers to open example files of their language.
+Spoofax uses the language specification to generate syntax highlighting, error reporting and menu actions for things such as compiling the example file to another language and debugging the example file or language specification.
+Having an example file open allows language developers to quickly test their specification, which achieves the "easy to iterate and experiment" goal of language workbenches.
+Although running code immediately on example programs is great for quick feedback, testing by running and checking on examples only gets you so far.
+Testing frameworks and unit tests address this in regular software development.
+Spoofax includes SPT, a meta-DSL and framework for testing a language specification.
+SPT is mostly useful to perform regression testing, but it also serves as documentation on how the language is supposed to work and it encourages one to think about edge cases.
+
+Spoofax editors and actions have many dependencies \question{Change to / include a dependency graph?}
+\begin{itemize}
+  \item The language specification editors have a dependency on the parse table and static analysis from their respective meta-DSL.
+  These are included in the Spoofax distribution.
+  \item Building a language implementation has dependencies on the language specification files, on the compilers for the meta-DSLs, and on some configuration files.
+  \item Editors for example files have many dependencies:
+  \begin{itemize}
+    \item The parse table is used to parse the file.
+    This produces an ATerm. \question{not explained yet, refer to future section or use AST for now?}
+    \item Static analysis uses some build artifacts from the static semantics specification to analyze the ATerm produced by parsing.
+    \item Syntax highlighting uses the parse table and some additional configuration settings and the ATerm.
+  \end{itemize}
+  \item SPT also depends on the same things as the example editors, except for the syntax highlighting.
+  The language under test is specified within each SPT file, so the language that an SPT file requires cannot be determined until after it has been parsed: dependencies are dynamic, not static.
+\end{itemize}
+
+Because Spoofax is an IDE, language developers expect it to update in real time as they are typing.
+This means that Spoofax needs to run editor services as fast as possible, preferably within a second.
+This is not always possible.
+Building a language specification to update example programs when a specification file is updated takes longer than a second for larger languages.
+Nevertheless, if the specification is unchanged and edits were only made to an example file, parsing, syntax highlighting and static analysis need to run.
+In this case, the language specification is unchanged and so does not need to be rebuild.
+Keeping track of which dependencies changed and only rerunning tasks that need updating is the task of the build system.
+For the next major version of Spoofax, Spoofax 3, the build system will be PIE.
+
+
 \subsection{Background information}
 \label{subsec:problem_analysis__background}
 
