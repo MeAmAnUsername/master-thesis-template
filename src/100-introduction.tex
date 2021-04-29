@@ -8,6 +8,27 @@ This is called a pipeline, and for the purposes of this thesis, the steps in suc
 For smaller projects, such a pipeline can be expressed in a command line script like a bash script or a bat script, but as the project grows such build scripts often become unmaintainable.\autocites{Hatch2018}{Moodie2006}
 Additionally, the full pipeline will be executed each build, even if nothing changed.
 Build systems aim to keep build scripts maintainable by providing a concise way to express dependencies of and between tasks.
+\question{Which of these examples is better?}
+\begin{lstlisting}
+  // Shows explicit file dependencies
+  func generateTestData(outputDir: path) -> unit = {
+    exec("generateData", [("dir", outputDir)]);
+    provides test_data_A.txt; provides test_data_B.txt;
+    unit
+    }
+  func runBenchmark(testDir: path) -> benchMarkResults = {
+    requires test_data_A.txt; requires test_data_B.txt;
+    exec("benchmark", testDir)
+  }
+\end{lstlisting}
+\begin{lstlisting}
+  // shows task dependencies by using one task as input for the other
+  func compileFile(file: path) -> string = {
+    val program = read file;
+    prettyPrint(compileToJava(parse(program)))
+  }
+\end{lstlisting}
+
 They also keep track of which inputs changed in order to build incrementally, which saves a lot of time in the case of small changes.
 
 \todo{explain what precise dynamic dependencies are (and why we care?)}
