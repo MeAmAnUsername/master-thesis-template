@@ -14,45 +14,45 @@ They also keep track of which inputs changed in order to build incrementally, wh
 A build system is precise if it keeps track of the exact dependencies of a task.
 A dynamic dependency is a dependency that can only be resolved at runtime.
 Almost no build system supports precise dynamic dependencies in a concise way.\missingref{verify this claim, back it up with some references, or make it more specific so that it is true}
-PIE does support precise dynamic dependencies.
-PIE is implemented as a framework in Java.
+\Ac{PIE} does support precise dynamic dependencies.
+\Ac{PIE} is implemented as a framework in Java.
 As such, it has a lot of boilerplate.
 Java is also poor for expressing concepts from the domain of pipelines.
-To solve these issues, the PIE DSL was developed.
-The PIE DSL allows a pipeline developer to express the relevant parts of a task definition in a language that allows easily expressing common concepts in pipelines.
-Because the DSL has significantly less boilerplate, it saves the developer time, is easier to read and has less duplication which improves maintainability and prevents bugs. 
-The concise PIE DSL task definition is compiled to Java, which generates all the Java boilerplate.
+To solve these issues, the \ac{PIE} \ac{DSL} was developed.
+The \ac{PIE} \ac{DSL} allows a pipeline developer to express the relevant parts of a task definition in a language that allows easily expressing common concepts in pipelines.
+Because the \ac{DSL} has significantly less boilerplate, it saves the developer time, is easier to read and has less duplication which improves maintainability and prevents bugs. 
+The concise \ac{PIE} \ac{DSL} task definition is compiled to Java, which generates all the Java boilerplate.
 
-While the PIE DSL and the compiler had implementations, they had several shortcomings:
+While the \ac{PIE} \ac{DSL} and the compiler had implementations, they had several shortcomings:
 \begin{enumerate}
   \item Existing compilers were not maintainable.
-  \item The DSL does not scale to larger projects, e.g. projects that consist of multiple language projects.
-  \item The DSL is implemented in NaBL2, which has a few limitations in expressiveness.
-  \item The DSL has limitations in expressiveness
+  \item The \ac{DSL} does not scale to larger projects, e.g. projects that consist of multiple language projects.
+  \item The \ac{DSL} is implemented in NaBL2, which has a few limitations in expressiveness.
+  \item The \ac{DSL} has limitations in expressiveness
   \begin{enumerate}
-    \item No way to express core concepts of PIE, e.g. Suppliers and Results.
+    \item No way to express core concepts of \ac{PIE}, e.g. Suppliers and Results.
     \item No way to declare injected values for tasks.
   \end{enumerate}
 \end{enumerate}
 
-We set out to improve the PIE DSL with the following objectives:
+We set out to improve the \ac{PIE} \ac{DSL} with the following objectives:
 \begin{itemize}
   \item Solve these problems
-  \item Keep the PIE DSL general
+  \item Keep the \ac{PIE} \ac{DSL} general
   \begin{itemize}
-    \item It could also compile to another language if another compiler and PIE framework were written in that language.
+    \item It could also compile to another language if another compiler and \ac{PIE} framework were written in that language.
     \item It should work for pipelines in general, not just Spoofax pipelines.
   \end{itemize}
-  \item Since PIE is meant to give realtime feedback in Spoofax, it should be reasonably performant
-  \item Keep the PIE DSL extendable. Do not add features that are incompatible with future extensions of the language where this is reasonably possible.
+  \item Since \ac{PIE} is meant to give realtime feedback in Spoofax, it should be reasonably performant
+  \item Keep the \ac{PIE} \ac{DSL} extendable. Do not add features that are incompatible with future extensions of the language where this is reasonably possible.
 \end{itemize}
 
 In the end, this thesis [has]  the following contributions:
 \begin{itemize}
   \item a new compiler for the DSL
-  \item implemented static semantics of the DSL in Statix
+  \item implemented static semantics of the \ac{DSL} in Statix
   \item Add modules, context parameters (and generics?) to the DSL
-  \item Evaluate the new DSL in three case studies:
+  \item Evaluate the new \ac{DSL} in three case studies:
   \begin{itemize}
     \item simple transformation from Tiger
     \item database pipelines at Oracle
@@ -63,8 +63,8 @@ In the end, this thesis [has]  the following contributions:
 
 The rest of this thesis is set up as follows.
 Section 2 gives an explanation of our use cases and explains the problems in more detail.
-Section 3 lists the improvements that were made to the PIE DSL.
-Section 4 evaluates the new DSL with three case studies.
-It also compares expressing a pipeline in the DSL or directly in the Java framework.
+Section 3 lists the improvements that were made to the \ac{PIE} \ac{DSL}.
+Section 4 evaluates the new \ac{DSL} with three case studies.
+It also compares expressing a pipeline in the \ac{DSL} or directly in the Java framework.
 Section 5 lists related work. \todo{slightly more descriptive: "puts this work into context by comparing it to solutions for similar problems"}
 Section 6 concludes this thesis.

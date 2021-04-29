@@ -20,7 +20,7 @@ Spoofax uses the language specification to generate syntax highlighting, error r
 Having an example file open allows language developers to quickly test their specification, which achieves the "easy to iterate and experiment" goal of language workbenches.
 Although running code immediately on example programs is great for quick feedback, testing by running and checking on examples only gets you so far.
 Testing frameworks and unit tests address this in regular software development.
-Spoofax includes SPT, a meta-DSL and framework for testing a language specification.
+Spoofax includes SPT, a meta-\ac{DSL} and framework for testing a language specification.
 SPT is mostly useful to perform regression testing, but it also serves as documentation on how the language is supposed to work and it encourages one to think about edge cases.
 
 Keeping Spoofax editors up-to-date follows a pipeline.
@@ -55,7 +55,7 @@ If the project is already inside a deeply nested folder, sometimes files simply 
 So every task needs to write robust code or needs some out of framework way to share such robust code.
 This lead to duplicate effort and a higher probability of bugs.
 
-The next major version of Spoofax, Spoofax 3, will use PIE as its build system.
+The next major version of Spoofax, Spoofax 3, will use \ac{PIE} as its build system.
 \Ac{PIE} includes caching out of the box.
 Tasks are Java classes that implement an interface which basically specifies that they have a method \inlinecode{exec}.
 The inputs and outputs of this method are automatically cached by the \ac{PIE} framework.
