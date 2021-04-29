@@ -61,8 +61,14 @@ Maybe the update to main was just editing a comment, in which case the program i
 A build system is precise if it keeps track of the exact dependencies of a task.
 A dynamic dependency is a dependency that can only be resolved at runtime.
 Almost no build system supports precise dynamic dependencies in a concise way.\missingref{verify this claim, back it up with some references, or make it more specific so that it is true}
-\todo{"What is PIE?"}
-\Ac{PIE} does support precise dynamic dependencies.
+To fill this gap, \ac{PIE} was developed by Gabriël Konat and Eelco Visser in \missingref. \todo{check if they are the only authors}
+\Ac{PIE} is a build system which expresses pipeline steps as functions.
+A function with its arguments forms a task.
+Each task can have dependencies on other tasks and on files.
+These dependencies are discovered dynamically during runtime.
+Because the dependencies are kept track of individually for each set of arguments, \ac{PIE} can keep precise dynamic dependencies.
+\Ac{PIE} also provides incremental execution, both from the goal of making a certain task up-to-date and from a set of changed files.
+
 \Ac{PIE} is implemented as a framework in Java.
 As such, it has a lot of boilerplate.
 Java is also poor for expressing concepts from the domain of pipelines.
