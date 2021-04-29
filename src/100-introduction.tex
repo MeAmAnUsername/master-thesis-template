@@ -8,6 +8,7 @@ This is called a pipeline, and for the purposes of this thesis, the steps in suc
 For smaller projects, such a pipeline can be expressed in a shell script like a bash script or a bat script, but as the project grows such build scripts often become unmaintainable.\autocites{Hatch2018}{Moodie2006}
 Additionally, the full pipeline will be executed each build, even if nothing changed.
 There is a multitude of build systems that aim to resolve these problems.
+\question{In your last feedback, you asked "What is a build system?". I expect my audience to know what a build system is, so what is this question asking?}
 Well known examples are Make, Maven, Ant, Gradle and MSBuild.\missingref
 One of the issues with shell scripts is that dependencies are implicitly encoded by the order in which steps are executed.
 This does not scale well because steps that depend on each other can get arbitrarily far away from each other, which makes it hard to see the dependencies.
@@ -42,6 +43,7 @@ They also keep track of which inputs changed in order to build incrementally, wh
 A build system is precise if it keeps track of the exact dependencies of a task.
 A dynamic dependency is a dependency that can only be resolved at runtime.
 Almost no build system supports precise dynamic dependencies in a concise way.\missingref{verify this claim, back it up with some references, or make it more specific so that it is true}
+\todo{"What is PIE?"}
 \Ac{PIE} does support precise dynamic dependencies.
 \Ac{PIE} is implemented as a framework in Java.
 As such, it has a lot of boilerplate.
@@ -52,6 +54,7 @@ Because the \ac{DSL} has significantly less boilerplate, it saves the developer 
 The concise \ac{PIE} \ac{DSL} task definition is compiled to Java, which generates all the Java boilerplate.
 
 While the \ac{PIE} \ac{DSL} and the compiler had implementations, they had several shortcomings:
+\todo{"Describe the problems in a more general way, without pointing to specific details. Those details can be explained in the next section."}
 \begin{enumerate}
   \item Existing compilers were not maintainable.
   \item The \ac{DSL} does not scale to larger projects, e.g. projects that consist of multiple language projects.
@@ -59,11 +62,11 @@ While the \ac{PIE} \ac{DSL} and the compiler had implementations, they had sever
   \item The \ac{DSL} has limitations in expressiveness
   \begin{enumerate}
     \item No way to express core concepts of \ac{PIE}, e.g. Suppliers and Results.
-    \item No way to declare injected values for tasks.
+    \item No way to declare injected values for tasks.\todo{"What are injected values? Too much detail => defer to problem analysis. Mention that you will go into more details about the problems in that section"}
   \end{enumerate}
 \end{enumerate}
 
-We set out to improve the \ac{PIE} \ac{DSL} with the following objectives:
+We set out to improve the \ac{PIE} \ac{DSL} with the following objectives:\todo{"Nice! Maybe it would be good to list this as non-functional requirements"}
 \begin{itemize}
   \item Solve these problems
   \item Keep the \ac{PIE} \ac{DSL} general
@@ -76,6 +79,9 @@ We set out to improve the \ac{PIE} \ac{DSL} with the following objectives:
 \end{itemize}
 
 In the end, this thesis [has]  the following contributions:
+\todo{Before listing your contributions, describe your solution and why/that it works. Your solution should address all the problems. 
+
+The contributions is just a summary of the work with references to the relevant sections. See Scalalbe incremental building paper.}
 \begin{itemize}
   \item a new compiler for the DSL
   \item implemented static semantics of the \ac{DSL} in Statix
