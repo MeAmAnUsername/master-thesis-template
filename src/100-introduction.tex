@@ -6,7 +6,7 @@
 Transforming some inputs into some outputs is often not done with a single program, but with multiple programs that have to be executed in sequence, passing the result between them.
 This is called a pipeline, and for the purposes of this thesis, the steps in such a pipeline are called tasks.
 For smaller projects, such a pipeline can be expressed in a command line script like a bash script or a bat script, but as the project grows such build scripts often become unmaintainable.(\cite{Hatch2018} and \cite{Moodie2006})
-Additionally, executing the full pipeline will take a long time, even if nothing changed.
+Additionally, the full pipeline will be executed each build, even if nothing changed.
 Build systems aim to keep build scripts maintainable by providing a concise way to express dependencies of and between tasks.
 They also keep track of which inputs changed in order to build incrementally, which saves a lot of time in the case of small changes.
 
