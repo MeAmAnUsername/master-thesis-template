@@ -38,6 +38,23 @@ Build systems aim to keep build scripts maintainable by providing a concise way 
   }
 \end{lstlisting}
 They also keep track of which inputs changed in order to build incrementally, which saves a lot of time in the case of small changes.
+\begin{lstlisting}
+  func main() -> unit = {
+    compileDirectory(./lib/pieLib/);
+    compileDirectory(./lib/someOtherLib/);
+    compileFile(./src/main/main.pie);
+    unit
+  }
+
+  // compiles all files in a directory (including subdirectories)
+  func compileDirectory(dir: path) -> string* =
+    [compileFile(file) | file <- walk dir]
+\end{lstlisting}
+In the example above, the main function compiles the directories \filename{lib/pieLib/} and \filename{lib/someOtherLib/} and the single file \filename{src/main/main.pie}.
+If we now update \filename{main.pie} and rerun the build, a simple build system would recompile everything.
+A smarter build system could see that only \filename{main.pie} was updated, and could therefor only recompile that file.
+\todo{Have some followup step after compilation that uses \emph{all} compiled files?}
+
 \todo{give an example of a build system incrementally building something}
 
 \todo{explain what precise dynamic dependencies are (and why we care?)}
