@@ -30,32 +30,32 @@ Build systems aim to keep build scripts maintainable by providing a concise way 
   }
 \end{lstlisting}
 \begin{lstlisting}
-  // before compiling to Java we first need to read the
-  // file into a string and parse the string to an AST
-  func compileFile(file: path) -> string = {
+  // before parsing the program we first 
+  // need to read the file into a string
+  func parseFile(file: path) -> AST = {
     val program: string = read file;
-    prettyPrint(compileToJava(parse(program)))
+    parse(program)
   }
 \end{lstlisting}
 They also keep track of which inputs changed in order to build incrementally, which saves a lot of time in the case of small changes.
 \begin{lstlisting}
   func main() -> unit = {
-    compileDirectory(./lib/pieLib/);
-    compileDirectory(./lib/someOtherLib/);
-    compileFile(./src/main/main.pie);
+    val inputFiles: path* = walk ./lib/pieLib/ with extension "pie"
+        + ./src/main/main.pie;
+    val programs = [(file.getSimpleName(), parseFile(file)) | file <- inputFiles];
+    val analysisResult = analyzeProject(programs);
+    val compiled = [(name, compile(name, program, analysisResult)) | (name, program) <- programs];
+    [writeFile(./out/java/$name.java, program) | (name, program) <- compiled];
     unit
   }
-
-  // compiles all files in a directory (including subdirectories)
-  func compileDirectory(dir: path) -> string* =
-    [compileFile(file) | file <- walk dir]
 \end{lstlisting}
-In the example above, the main function compiles the directories \filename{lib/pieLib/} and \filename{lib/someOtherLib/} and the single file \filename{src/main/main.pie}.
-If we now update \filename{main.pie} and rerun the build, a simple build system would recompile everything.
-A smarter build system could see that only \filename{main.pie} was updated, and could therefor only recompile that file.
-\todo{Have some followup step after compilation that uses \emph{all} compiled files?}
-
-\todo{give an example of a build system incrementally building something}
+In the example above, the main function uses the files in the directory \filename{lib/pieLib/} and the single file \filename{src/main/main.pie}.
+It parses each file individually, analyzes all files together, compiles files using the analysis results and finally writes the compiled programs to the file system.
+If we now update \filename{main.pie} and rerun the build, a simple build system would parse, re-analyze and recompile everything.
+A smarter build system could see that only \filename{main.pie} was updated, and could therefor parse only that file, and then run everything else for everything again, as the analysis depends on all files and therefor all compilation results depend on all files.
+This at least saves us having to parse all the library files.
+An even smarter build system might check if the update to \filename{main.pie} actually affected the program.
+Maybe the update to main was just editing a comment, in which case the program is unchanged, and after parsing \filename{main.pie} everything is up-to-date.
 
 \todo{explain what precise dynamic dependencies are (and why we care?)}
 A build system is precise if it keeps track of the exact dependencies of a task.
