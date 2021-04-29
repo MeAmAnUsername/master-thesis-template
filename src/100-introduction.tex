@@ -52,9 +52,9 @@ They also keep track of which inputs changed in order to build incrementally, wh
 In the example above, the main function uses the files in the directory \filename{lib/pieLib/} and the single file \filename{src/main/main.pie}.
 It parses each file individually, analyzes all files together, compiles files using the analysis results and finally writes the compiled programs to the file system.
 If we now update \filename{main.pie} and rerun the build, a simple build system would parse, re-analyze and recompile everything.
-A smarter build system could see that only \filename{main.pie} was updated, and could therefor parse only that file, and then run everything else for everything again, as the analysis depends on all files and therefor all compilation results depend on all files.
+A more advanced build system could see that only \filename{main.pie} was updated, and could therefor parse only that file, and then run everything else for everything again, as the analysis depends on all files and therefor all compilation results depend on all files.
 This at least saves us having to parse all the library files.
-An even smarter build system might check if the update to \filename{main.pie} actually affected the program.
+An even more advanced build system might check if the update to \filename{main.pie} actually affected the program.
 Maybe the update to main was just editing a comment, in which case the program is unchanged, and after parsing \filename{main.pie} everything is up-to-date.
 
 \todo{explain what precise dynamic dependencies are (and why we care?)}
