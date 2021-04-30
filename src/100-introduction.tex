@@ -2,6 +2,7 @@
 
 \section{Introduction}
 \label{sec:introduction}
+\question{Using sections does not work well with this thesis template, it expects chapters as top level elements. Other students also use chapters. Do I really need to use sections?}
 
 Transforming some inputs into some outputs is often not done with a single program, but with multiple programs that have to be executed in sequence, passing the result between them.
 This is called a pipeline, and for the purposes of this thesis, the steps in such a pipeline are called tasks.
@@ -81,7 +82,7 @@ While the \ac{PIE} \ac{DSL} and the compiler had implementations, they had sever
 \begin{enumerate}
   \item Existing compilers were not maintainable.
   \item The \ac{DSL} does not scale to larger projects.
-  \item The implementation of the \ac{DSL} is written in outdated languages.
+  \item The implementation of the static semantic \ac{DSL} is written in an outdated language.
   \item The \ac{DSL} has limitations in expressiveness.
 \end{enumerate}
 These problems will be explained in more detail in the next chapter, \nameref{sec:problem_analysis}.
@@ -99,25 +100,25 @@ These improvements were subject to the following non-functional requirements:
   Do not add features that are incompatible with future extensions of the language where this is reasonably possible.
 \end{itemize}
 
-In the end, this thesis [has]  the following contributions:
-\todo{Before listing your contributions, describe your solution and why/that it works. Your solution should address all the problems. The contributions is just a summary of the work with references to the relevant sections. See Scalalbe incremental building paper.}
+We solved the above issues while meeting the provided requirements.
+For our solution, we:
+\todoLater{did we do all of these?}
 \begin{itemize}
-  \item a new compiler for the DSL
-  \item implemented static semantics of the \ac{DSL} in Statix
+  \item Implemented a new compiler for the DSL
+  \item Implemented static semantics of the \ac{DSL} in a more modern language
   \item Add modules, context parameters (and generics?) to the DSL
-  \item Evaluate the new \ac{DSL} in three case studies:
-  \begin{itemize}
-    \item simple transformation from Tiger
-    \item database pipelines at Oracle
-    \item testing pipelines at Oracle
-  \end{itemize}
   \item Evaluation of performance for generated code (?)
 \end{itemize}
 
-The rest of this thesis is set up as follows.
+In the end, this thesis [has] the following contributions:
 Section 2 gives an explanation of our use cases and explains the problems in more detail.
 Section 3 lists the improvements that were made to the \ac{PIE} \ac{DSL}.
-Section 4 evaluates the new \ac{DSL} with three case studies.
+Section 4 evaluates the new \ac{DSL} in three case studies:
+\begin{itemize}
+  \item simple transformation from Tiger (a toy language)
+  \item database pipelines at Oracle
+  \item testing pipelines at Oracle
+\end{itemize}
 It also compares expressing a pipeline in the \ac{DSL} or directly in the Java framework.
-Section 5 lists related work. \todo{slightly more descriptive: "puts this work into context by comparing it to solutions for similar problems"}
+Section 5 lists related work. \question{slightly more descriptive: "puts this work into context by comparing it to solutions for similar problems". Is this better?}
 Section 6 concludes this thesis.
