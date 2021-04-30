@@ -4,7 +4,7 @@ CONTINUOUS = -pvc -view=default -halt-on-error
 
 DOCUMENT   := document
 OUTPUT     := $(DOCUMENT)
-RESEARCHR  := b0402c72-980f-6580-6b0e-7a614ed2d64c-master-thesis
+RESEARCHR  := 8466f209-d22d-4a82-aff4-e75ba08dba11-master-thesis
 SRCDIR     := src
 FIGDIR     := src/fig
 IMGDIR     := src/img
