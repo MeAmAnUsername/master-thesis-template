@@ -90,4 +90,7 @@ Instead, the newly created tree scope has a \inlinecode{FILE} edge to the file s
 
 \subsection{\label{subsec:solution__statix__generics}Generics}
 [I will start writing this section when I actually start on implementing generics]
+Reasons to implement generics:
+- Could not interop with generic classes
+- Workaround by making common library classes is ugly (also from an easthetic sense: we could not give methods on generic types the same syntax, so \inlinecode{Supplier.get()} did not work, we had to use \inlinecode{Supplier.get<>()})
 \todo{describe generics}
