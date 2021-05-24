@@ -19,6 +19,9 @@ missfont.log
 # Intellij
 /.idea
 
+# Mac
+.DS_Store
+
 # adapted from github/misberner/.gitignore-latex
 # https://gist.github.com/misberner/8316891
 # LaTeX temporary files
