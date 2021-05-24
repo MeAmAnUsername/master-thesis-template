@@ -1,10 +1,10 @@
 % !TEX root = document.tex
 
-\section{Problem analysis}
-\label{sec:problem_analysis}
+\chapter{Problem analysis}
+\label{chap:problem_analysis}
 
-\subsection{Use case}
-\label{subsec:problem_analysis__use_case}
+\section{Use case}
+\label{sec:problem_analysis__use_case}
 
 Language engineering is the discipline of designing and implementing programming languages.
 The state of the art right now is to implement languages ad-hoc, i.e.\ most major languages implement most of their parsing, syntax highlighting, static analysis, etc. from scratch.\missingref
@@ -62,11 +62,11 @@ The inputs and outputs of this method are automatically cached by the \ac{PIE} f
 It saves the inputs and corresponding outputs as a database in a single file, which avoids many of the issues with files.
 It also means that the pipeline developer need not concern themselves with caching.
 
-\subsection{Background information}
-\label{subsec:problem_analysis__background}
+\section{Background information}
+\label{sec:problem_analysis__background}
 
-\subsubsection{ATerms}
-\label{subsubsec:problem_analysis__background__aterms}
+\subsection{ATerms}
+\label{subsec:problem_analysis__background__aterms}
 
 Programs are expressed in human readable syntax, but this is hard and inefficient to manipulate directly.
 Instead, code is parsed to an \ac{AST}, which throws away the syntax and keeps the parts of a program that can change.
@@ -75,8 +75,8 @@ An ATerm consists of a constructor, arguments and possibly some annotations.
 As an example, the expression \inlinecode{x * 9 - 3} is represented as \inlinecode{Minus(Times(Var("x"), Int("9")), Int("3"))}.
 Spoofax meta-languages can pattern-match on these constructors to define rules, such as rules in Stratego to transform a constructor or rules in Statix to define the static semantics.
 
-\subsubsection{Ways to compile}
-\label{subsubsec:problem_analysis__background__ways_to_compile}
+\subsection{Ways to compile}
+\label{subsec:problem_analysis__background__ways_to_compile}
 
 There are two ways to compile from a source language to a target language.
 
@@ -97,8 +97,8 @@ Stratego currently verifies the arity of constructors.
 Verifying the arguments to a constructor are of the right type (e.g. checking that \inlinecode{x} and \inlinecode{y} in \inlinecode{Add(x, y)} are expressions instead of, say, import statements) is currently a work in progress.
 Transforming to an \ac{AST} also means that the transformed program is immediately ready for post-processing, no parsing required.
 
-\subsubsection{Language projects in Spoofax}
-\label{subsubsec:problem_analysis__background__spoofax_language_projects}
+\subsection{Language projects in Spoofax}
+\label{subsec:problem_analysis__background__spoofax_language_projects}
 
 \question{Move to ``Use case'' above?}
 
@@ -120,8 +120,8 @@ It also allows exporting parts of this language project and importing exported p
 This makes language composition possible.
 For example, the \ac{PIE} language project imports the Java grammar to compile the \ac{PIE} \ac{DSL} to Java.
 
-\subsubsection{Compilation with Stratego}
-\label{subsubsec:problem_analysis__background__stratego}
+\subsection{Compilation with Stratego}
+\label{subsec:problem_analysis__background__stratego}
 
 Stratego is a meta-language to express program transformations.
 Examples are optimizations (\inlinecode{5 + x + 10 * x + 8} to \inlinecode{18 + 11 * x}) and compiling one language to another: \inlinecode{for (int i = 0; i<10; i++) \{...\}} to \inlinecode{for i in 0..9: ...}.
@@ -150,8 +150,8 @@ A strategy defines how to apply a rule to an \ac{AST}.
 In this case, we can try to apply it to all subterms: \inlinecode{bottomup(try(fold-constants))}.
 This first applies the rule to the subterms to produce \inlinecode{If(True(), Print("It's true"), Print("It's false"))}, and then applies the rule to the term itself to produce the final result \inlinecode{Print("It's true")}.
 
-\subsubsection{Foreign functions in \ac{PIE} \ac{DSL}}
-\label{subsubsec:problem_analysis__background__foreign_functions}
+\subsection{Foreign functions in \ac{PIE} \ac{DSL}}
+\label{subsec:problem_analysis__background__foreign_functions}
 
 The \ac{PIE} \ac{DSL} can interoperate with Java by calling Java methods.
 To call a Java method, it needs to be declared in the \ac{PIE} program.
@@ -165,15 +165,15 @@ The part after the \inlinecode{=} specifies the function definition.
 \inlinecode{foreign java} designates this as a function that is declared in Java, and \inlinecode{java.lang.Math.signum} is the fully qualified name to the class and the function name.
 The definition does not need the Java parameters because the \ac{PIE} parameters are mapped to Java parameters automatically.
 
-\subsection{Problems}
-\label{subsec:problem_analysis__problems}
+\section{Problems}
+\label{sec:problem_analysis__problems}
 
 \todo{Should I talk about these problems in the present tense or past tense? ("The PIE DSL cannot express ..." vs. "The PIE DSL could not express ...")}
 The problems with the \ac{PIE} \ac{DSL} fall into two categories.
 There are problems with the language design and problems with the language implementation.
 
-\subsubsection{Lack of scalability}
-\label{subsubsec:problem_analysis__problems__scalability}
+\subsection{Lack of scalability}
+\label{subsec:problem_analysis__problems__scalability}
 
 A \ac{PIE} program used to be written entirely in a single file, referring to other files was not possible.
 In Spoofax, we want one \ac{PIE} file per language project, \ac{PIE} is limited to a single language project at a time.
@@ -183,8 +183,8 @@ Finally, a project could just consist of multiple projects.
 An example is the Green-Marl compiler, which is one of the case studies (see \todo{add reference to Green-Marl pipelines case study}).
 In conclusion, we want a principled way to refer to other \ac{PIE} files in order to use \ac{PIE} in bigger projects with multiple languages.
 
-\subsubsection{Limitations in expressiveness}
-\label{subsubsec:problem_analysis__problems__expressiveness}
+\subsection{Limitations in expressiveness}
+\label{subsec:problem_analysis__problems__expressiveness}
 
 The \ac{PIE} framework is under active development.
 This sometimes adds new requirements on things to express using the \ac{PIE} \ac{DSL}.
@@ -211,17 +211,17 @@ The \ac{PIE} \ac{DSL} did not have any way to specify such an instance variable.
 
 We would like to extend the language with new syntax and semantics in order to handle these uses.
 
-\subsubsection{NaBL2 limits static semantics}
-\label{subsubsec:problem_analysis__problems__nabl2}
+\subsection{NaBL2 limits static semantics}
+\label{subsec:problem_analysis__problems__nabl2}
 
-As mentioned in the previous problem (\ref{subsubsec:problem_analysis__problems__expressiveness}), the \ac{PIE} \ac{DSL} could not interoperate with generic classes in Java.
+As mentioned in the previous problem (\ref{subsec:problem_analysis__problems__expressiveness}), the \ac{PIE} \ac{DSL} could not interoperate with generic classes in Java.
 The simplest solution is to add support for generic classes to \ac{PIE} \ac{DSL} as well.
 However, \ac{PIE} \ac{DSL} is implemented using NaBL2.
 NaBL2 does not have the power/expressiveness to allow implementing generics.
 Furthermore, NaBL2 has limited static error reporting and limited ways to provide debugging information in case of runtime errors, which makes development in NaBL2 tedious.
 
-\subsubsection{Compiler}
-\label{subsubsec:problem_analysis__problems__compiler}
+\subsection{Compiler}
+\label{subsec:problem_analysis__problems__compiler}
 
 The \ac{PIE} \ac{DSL} had two compilers.
 The first one compiled to Kotlin.
