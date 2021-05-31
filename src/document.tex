@@ -15,7 +15,6 @@
 \documentclass[twoside,a4paper,11pt]{memoir}
 \usepackage{document}
 \usepackage{todonotes}
-\setuptodonotes{inline}
 \usepackage{listings}
 \lstset{
 basicstyle=\small\ttfamily,
@@ -26,9 +25,19 @@ breaklines=true
 \newcommand{\inlinecode}{\texttt}
 \newcommand{\filename}{\texttt}
 \newcommand{\id}{\texttt}
-\newcommand{\question}[1]{\todo[backgroundcolor=cyan]{#1}}
-\newcommand{\todoLater}[1]{\todo[backgroundcolor=gray]{#1}}
-\newcommand{\missingref}[1][add reference]{\todo[backgroundcolor=pink]{#1}}
+
+\LetLtxMacro{\todonote}{\todo}
+
+% inlineTodo: creates an inline todo note. The note will also be added to the
+% todo notes list.
+% Arguments:
+% 1: text color
+% 2: the text
+\newcommand{\inlineTodo}[2]{{\color{#1}{#2}} \addcontentsline{tdo}{todo}{#2}}
+\renewcommand{\todo}[1]{\inlineTodo{orange}{todo: #1}}
+\newcommand{\question}[1]{\inlineTodo{cyan}{question: #1}}
+\newcommand{\todoLater}[1]{\todonote[backgroundcolor=gray]{later: #1}}
+\newcommand{\missingref}[1][add reference]{\inlineTodo{pink}{#1}}
 
 % Add \@ _before_ the terminating period of the sentence (`UI\@. Test`)
 % to allow inter-sentence spacing when the sentence ends with a capital letter.
