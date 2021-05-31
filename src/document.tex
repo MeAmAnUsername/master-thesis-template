@@ -33,7 +33,8 @@ breaklines=true
 % Arguments:
 % 1: text color
 % 2: the text
-\newcommand{\inlineTodo}[2]{{\color{#1}{#2}} \addcontentsline{tdo}{todo}{#2}}
+\newcommand{\inlineTodo}[2]{{\color{#1}{#2}} \addcontentsline{tdo}{todo}{\fcolorbox{black}{#1}{\textcolor{#1}{o}}\ {#2}}}
+
 \renewcommand{\todo}[1]{\inlineTodo{orange}{todo: #1}}
 \newcommand{\question}[1]{\inlineTodo{cyan}{question: #1}}
 \newcommand{\todoLater}[1]{\todonote[backgroundcolor=gray]{later: #1}}
