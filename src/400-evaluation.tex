@@ -85,14 +85,26 @@ The \ac{PIE} \ac{DSL} code uses X \ac{loc}, while the equivalent Java code uses 
 \section{Case study: PGX Algorithms pipelines}
 \label{sec:evaluation__database}
 
+\begin{figure}
+  \caption{An implementation of the Adamic-Adar index in Green-Marl and \ac{PGX-A}}
+  \label{lst:case_study_pgx_a_adamic_adar}
+  \lstinputlisting[language=Java]{code/adamic-agar.java}
+  \lstinputlisting{code/adamic-agar.gm}
+\end{figure}
+
 \Ac{PGX} is a toolkit for graph analysis, both for graph algorithms and SQL-like queries.
-It consists of several parts, the two we are interested in are Green-Marl and \ac{PGX-A}.
-Green-Marl is a \ac{DSL} for expressing graph algorithms.
-\Ac{PGX-A} is an \ac{EDSL} for expressing graph algorithms in Java.
-\Ac{PGX-A} does the same as Green-Marl, but integrates easier with Java.
-Examples of graph algorithms are Dijkstra's algorithm for finding the shortest path\missingref or Kruskal's algorithm for finding the minimum spanning tree\missingref.
+It provides two \acp{DSL}, Green-Marl and \ac{PGX-A}.
+Both can express graph algorithms.
+Green-Marl is a standalone \ac{DSL} for expressing graph algorithms.
+\Ac{PGX-A} is an \ac{EDSL} in Java, this makes integration with Java easier.
+Examples of graph algorithms are Dijkstra's algorithm for finding the shortest path\missingref and Kruskal's algorithm for finding the minimum spanning tree\missingref.
+Another example is the Adamic-Adar index of edges.
+Its implementation in Green-Marl and \ac{PGX-A} can be seen in figure \ref{lst:case_study_pgx_a_adamic_adar}.
+The Adamic-Adar index can be used to predict edges between nodes in a social network.
 \Ac{DFS} and \ac{BFS} are considered such fundamental algorithms that they are built-in functions.
 The algorithms expressed in \ac{PGX-A} are compiled to an implementation for either a single machine or shared memory \ac{PGX} runtime.
+
+
 
 The compilation goes as follows:
 \begin{enumerate}
@@ -100,10 +112,13 @@ The compilation goes as follows:
   \item The Java code is transformed to Green-Marl.
   \item The Green-Marl is analyzed.
   \item The Green-Marl is compiled to C, C++, Java or \ac{PL/SQL} depending on what the runtime requires.
-  \item In the case of Java, the generated class can be compiled and loaded by the environment. In the case of C, C++ and \ac{PL/SQL} the generated code is passed to the database team in Oracle to be compiled into the Oracle Database binary.
 \end{enumerate}
 
-
+This chapter:
+- [done] Explain Green-Marl and PGX-A
+- [done] Add example code for both
+- Explain goal of this chapter: pipeline for PGX-A, executable as command line tool
+- Give results: PIE code, equivalent Java code, supporting code (Gradle, Java classes that can't be expressed in PIE, etc)
 
 \subsection{Introduction}
 \label{sec:evaluation__database__introduction}

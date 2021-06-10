@@ -1,0 +1,17 @@
+/*
+ * Copyright (C) 2013 - 2021 Oracle and/or its affiliates. All rights reserved.
+ */
+
+procedure adamic_adar(graph G; edgeProp<double> aa) {
+
+  foreach (e: G.edges) {
+    node src = e.fromNode();
+    node dst = e.toNode();
+
+    // In C++ backend, the compiler optimizes below
+    e.aa = sum (n: src.nbrs) (n.hasEdgeFrom(dst)) {1 / log(n.numNbrs())};
+
+    // into
+    // e.aa = sum(n: src.commonNbrs(dst)) {1 / log(n.numNbrs())};
+  }
+}
