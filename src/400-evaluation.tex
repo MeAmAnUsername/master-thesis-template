@@ -164,6 +164,76 @@ What are we trying to do in this case study?
 \section{Analysis}
 \label{sec:evaluation__analysis}
 
+Use case: user needs some pipeline.
+We distinguish five categories of tasks related to writing pipeline code:
+1. Implementing the initial pipeline. The user either has no pipeline at all, or more likely, has an existing pipeline in some other language but decided to change to PIE (a good decision).\todo
+2. Changing/extending an existing pipeline. This refers to semantic changes to the pipeline: some steps need to be executed earlier, later, added or removed.\todo
+3. Maintaining an existing pipeline. This refers to changes to the code that do not change the conceptual pipeline. An example is a change in the api of a dependency, so now the pipeline code needs to be updated to the new api.\todo
+4. Reading the pipeline code to understand what it does, with no intention of changing it. This will happen a lot, definitely the most if we include reading of code during the other user tasks (i.e. if you want to change the pipeline in some way, you will likely need to read parts of it that do not need to be changed but that are related and need to be understood to make the change).
+5. Debugging the pipeline. This is not a goal by itself, but arises as part of the other tasks. It is mentioned explicitly because it is important: being unable to properly debug the pipeline (even with just print statements) severely harms the user friendliness.
+
+
+
+Goals of this thesis / PIE DSL: make developing in PIE more user friendly by making it easier to write tasks.
+We divide this on the following subgoals, depending on the task that the user is trying to achieve:
+- Increase readability. Readability is a nebulous concept, but it more or less means that we want to convey the necessary information/understanding in an as short a time as possible. "Necessary information" refers to the information that the user requires for their particular task.
+Note that this does not mean that we optimize for more concise code. More concise code is only useful if it allows the user to read the code faster.
+Reading the code happens in all user tasks, and is central to task 4: reading the pipeline code to understand it.
+- Increase ease of writing. It should be easy and quick to write PIE DSL code.
+This can be achieved by making it specific to the domain of pipelines, by including types that are relevant to pipelines and by making simple syntax for common patterns.
+This is related to readability: if it is easy to read, it is likely not too long or complicated, so it would be easy to write as well.
+- Make it easy to reason about. This is sort of the step between reading and writing when making a change: once the user has read the code and understands what it does, it should be easy to reason about so that it is easy to figure out what to do to make the desired changes. (Is this part of the DSL? Seems more like a task for the model that PIE is built on)
+- 
+
+
+Afterthought: I think of it like this:
+- readability: how easy is it to read some fragment (e.g. a single task) of code and understand what it does?
+- reasoning about it: once you understand what each fragment of code does, how easy is it to figure out what the program as a whole does? How easy is it to figure out what changes should be made to bring about some desired change in behavior? How easy is it to break up an understanding of what the program should do into fragments?
+- Writing: once you understand what fragments there should be and how the fragments should compose to do what you want, how easy is it to write down these fragments as code or to modify the existing fragments?
+
+Reasoning about it is mostly influenced by the model defined by PIE.
+The reading and writing are where the DSL should bring improvements.
+
+
+This is impossible to measure directly because it depends on the user.
+There are however instrumental goals that improve usability:
+- Increase the amount of information that is visible on the screen (while keeping the accessibility/readability of that information the same).
+- Increase the amount of information that is visible on the screen (while keeping the accessibility/readability of that information the same).
+- Reduce the amount of code (less code means means easier maintenance ceteris paribus. Ceteris paribus does not hold, system becomes more complex, but reduction in code should outweigh increased build system complexity). (Is this just the exact same as information?)
+- Increase editor services like static error reporting. (PIE DSL compared to pure Java actually does the opposite: imports are not checked statically. More static error reporting when comparing old DSL vs new DSL)
+- Increase expressiveness? (this one is contentious)
+- Applicability to various domains. PIE can't be user friendly if it doesn't work for your domain.
+
+To evaluate whether the new PIE DSL meets these goals, we use PIE DSL to express pipelines in various domains:
+- Spoofax 3 language compiler pipeline. Compiles a language specification to a language implementation.
+- PGX-A program pipeline. Compiles a program from Green-Marl to C, C++, PL/SQL.
+- Code editor/IDE for Tiger. Various tasks for editor actions.
+- Testing pipeline: pipeline for testing the generated parser and prettyprinter of a language.
+- Benchmarking: benchmarking pipelines for various things. We only want to execute the benchmark for things that were changed.
+
+These case studies will be evaluated on the following points:
+- Lines of code. We express each pipeline in the old DSL, the new DSL and Java. Because we express the exact same pipeline in all these languages, they each contain the same total amount of information. This means that we can use the lines of code to compare the amount of information per line in each language. This also reduces the amount of code.
+- Increase expressiveness? (this one is contentious)
+- Applicability to various domains. PIE can't be user friendly if it doesn't work for your domain.
+
+We will also evaluate the differences in editor services from a theoretical standpoint. This cannot be done as part of the case studies because the case studies are a static code base without any errors, while this focusses on dynamic errors during development.
+
+
+Probably requires user studies, even then pretty hard.
+Instead, we will evaluate this goal by comparing several heuristics between the new PIE DSL, the old PIE DSL, and writing everything in Java.
+- Reduction in boilerplate (less is better).
+  - How much code is no longer duplicated
+  - How much code is no longer written at all
+  - How many lines of code are there?
+    Conceptually, the PIE tasks in both Java and PIE DSL express the exact same pipeline. This means that any size difference is caused by useless information (boilerplate).
+    Boilerplate reduces readability because the developer now needs to spend time/thinking about whether information is relevant or not [citation needed], and because less information fits on screen, so understanding the code now requires more scrolling.
+- Time to write tasks (less is better).
+- readability. Highly subjective, depends on experience of the developer. (example: I am currently not experienced with the PIE api, so I find Java harder to read). In general though: PIE DSL makes it easier to read inputs, because in Java these are often not on the screen (class is too big)
+- How much can be expressed. Compare other categories based on either just the tasks that are now in PIE DSL, or over whole code base (including classes /configuration that still has to be Java)
+
+
+
+
 
 \subsection{Boilerplate reduction}
 \label{subsec:evaluation__analysis__boilerplate_reduction}
