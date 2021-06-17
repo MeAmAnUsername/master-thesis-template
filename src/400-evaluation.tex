@@ -166,7 +166,7 @@ What are we trying to do in this case study?
 
 Use case: user needs some pipeline.
 We distinguish five categories of tasks related to writing pipeline code:
-1. Implementing the initial pipeline. The user either has no pipeline at all, or more likely, has an existing pipeline in some other language but decided to change to PIE (a good decision).\todo
+1. Implementing the initial pipeline. The user either has no pipeline at all or has an existing pipeline in some other language but decided to change to PIE.\todo
 2. Changing/extending an existing pipeline. This refers to semantic changes to the pipeline: some steps need to be executed earlier, later, added or removed.\todo
 3. Maintaining an existing pipeline. This refers to changes to the code that do not change the conceptual pipeline. An example is a change in the api of a dependency, so now the pipeline code needs to be updated to the new api.\todo
 4. Reading the pipeline code to understand what it does, with no intention of changing it. This will happen a lot, definitely the most if we include reading of code during the other user tasks (i.e. if you want to change the pipeline in some way, you will likely need to read parts of it that do not need to be changed but that are related and need to be understood to make the change).
@@ -175,7 +175,7 @@ We distinguish five categories of tasks related to writing pipeline code:
 
 
 Goals of this thesis / PIE DSL: make developing in PIE more user friendly by making it easier to write tasks.
-We divide this on the following subgoals, depending on the task that the user is trying to achieve:
+We divide this into the following subgoals, depending on the task that the user is trying to achieve:
 - Increase readability. Readability is a nebulous concept, but it more or less means that we want to convey the necessary information/understanding in an as short a time as possible. "Necessary information" refers to the information that the user requires for their particular task.
 Note that this does not mean that we optimize for more concise code. More concise code is only useful if it allows the user to read the code faster.
 Reading the code happens in all user tasks, and is central to task 4: reading the pipeline code to understand it.
@@ -197,26 +197,28 @@ The reading and writing are where the DSL should bring improvements.
 
 This is impossible to measure directly because it depends on the user.
 There are however instrumental goals that improve usability:
-- Increase the amount of information that is visible on the screen (while keeping the accessibility/readability of that information the same).
-- Increase the amount of information that is visible on the screen (while keeping the accessibility/readability of that information the same).
-- Reduce the amount of code (less code means means easier maintenance ceteris paribus. Ceteris paribus does not hold, system becomes more complex, but reduction in code should outweigh increased build system complexity). (Is this just the exact same as information?)
-- Increase editor services like static error reporting. (PIE DSL compared to pure Java actually does the opposite: imports are not checked statically. More static error reporting when comparing old DSL vs new DSL)
-- Increase expressiveness? (this one is contentious)
-- Applicability to various domains. PIE can't be user friendly if it doesn't work for your domain.
+- Increase the amount of information that is visible on the screen (while keeping the readability of that information the same).
+- Reduce the amount of code (less code means easier maintenance ceteris paribus. Ceteris paribus does not hold, system becomes more complex, but reduction in code should outweigh increased build system complexity). (Is this just the exact same as information?)
+- Increase editor services like static error reporting, showing documentation, automated imports and reference following. (PIE DSL compared to pure Java actually does the opposite: no documentation, no static checks and no following references from Java to PIE or vice versa. More static error reporting when comparing old DSL vs new DSL)
+- Increase expressiveness to increase applicability. Writing several tasks or helper functions and wrappers in Java does not improve user friendliness.
+- Increase applicability to various domains. PIE can't be user friendly if it doesn't work for your domain.
 
 To evaluate whether the new PIE DSL meets these goals, we use PIE DSL to express pipelines in various domains:
 - Spoofax 3 language compiler pipeline. Compiles a language specification to a language implementation.
 - PGX-A program pipeline. Compiles a program from Green-Marl to C, C++, PL/SQL.
 - Code editor/IDE for Tiger. Various tasks for editor actions.
 - Testing pipeline: pipeline for testing the generated parser and prettyprinter of a language.
-- Benchmarking: benchmarking pipelines for various things. We only want to execute the benchmark for things that were changed.
+- Benchmarking: benchmarking pipelines for various things. We only want to re-execute the benchmark for tests that were changed.
 
 These case studies will be evaluated on the following points:
 - Lines of code. We express each pipeline in the old DSL, the new DSL and Java. Because we express the exact same pipeline in all these languages, they each contain the same total amount of information. This means that we can use the lines of code to compare the amount of information per line in each language. This also reduces the amount of code.
-- Increase expressiveness? (this one is contentious)
-- Applicability to various domains. PIE can't be user friendly if it doesn't work for your domain.
+This covers the amount of information that is visible on screen (sort of) and "less code is better"
+- The percentage of tasks that can be expressed in the DSL.
+This covers the expressiveness of the DSL. We will also compare this percentage between case studies to gauge how applicable the PIE DSL is across domains.
 
-We will also evaluate the differences in editor services from a theoretical standpoint. This cannot be done as part of the case studies because the case studies are a static code base without any errors, while this focusses on dynamic errors during development.
+We will also evaluate the differences in editor services from a theoretical standpoint. This will not be done as part of the case studies because this focusses on dynamic errors during development, and I really do not feel like writing down every time I get a static error or follow a reference.
+
+
 
 
 Probably requires user studies, even then pretty hard.
