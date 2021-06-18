@@ -275,7 +275,7 @@ These case studies will be evaluated on the following points:
   Because we express the exact same pipeline in all these languages, they each contain the same total amount of information.
   This means that we can use the lines of code to compare the amount of information per line in each language.
   This covers the amount of information that is visible on screen (sort of).
-  \item The amount of information that is duplicated. \todo{How to test this?}
+  \item The amount of information that is duplicated. \todo{How to test this? Seems like it should either be a theoretical analysis (like editor services below) or approximated using lines of code}
   \item The percentage of tasks that can be expressed in the DSL.
   This covers the expressiveness of the DSL.
   We will also compare this percentage between case studies to gauge how applicable the PIE DSL is across domains.
@@ -288,6 +288,8 @@ These case studies will be evaluated on the following points:
 
 We will also perform some evaluations outside the case studies.
 \begin{enumerate}
+  \item New language features and the problems they solve.
+  This will just be a discussion of the problems with the old DSL and how this was resolved in the new DSL.
   \item Editor services will be analyzed from a theoretical perspective.
   This is not done as part of the case studies because this concerns dynamic errors during development, and I really do not feel like writing down every time I get a static error or follow a reference.
   \item The time to write tasks is an important factor for the user friendliness, but is again something that cannot be tested with a completed pipeline.
