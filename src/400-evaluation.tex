@@ -165,84 +165,135 @@ What are we trying to do in this case study?
 \label{sec:evaluation__analysis}
 
 Note: some/most/all of this probably needs to go to the introduction or problem analysis.
-User use case: user needs to build some system and would like it to be precise, sound, incremental [etc]. The user has decided to use PIE to implement this pipeline.
+It is currently here because I had to write it somewhere and I can't really make a good structure before I know what my goals and methodologies are.
+
+\subsection{User goal and tasks}
+Note: the user refers to the pipeline developer.\\
+User use case: user needs to build some system and would like it to be precise, sound, incremental, etc.
+The user has decided to use PIE to implement this pipeline.
 We distinguish five categories of tasks related to writing pipeline code:
-1. Implementing the initial pipeline. The user either has no pipeline at all or has an existing pipeline in some other language / framework but decided to change to PIE.
-2. Changing/extending an existing pipeline. This refers to semantic changes to the pipeline: some steps need to be executed earlier, later, added or removed.
-3. Maintaining an existing pipeline. This refers to changes to the code that do not change the conceptual pipeline. For example, there was a change in the api of a dependency, so now the pipeline code needs to be updated to the new api.
-4. Reading the pipeline code to understand what it does, with no intention of changing it. This will happen a lot, definitely the most if we include reading of code during the other user tasks (i.e. if you want to change the pipeline in some way, you will likely need to read parts of it that do not need to be changed but that are related and need to be understood to make the change).
-5. Debugging the pipeline. This is not a goal by itself, but arises as part of the other tasks. It is mentioned explicitly because it is important: being unable to properly debug the pipeline (even with just print statements) severely harms the user friendliness.
+\begin{enumerate}
+  \item Implementing the initial pipeline.
+  The user either has no pipeline at all or has an existing pipeline in some other language or framework but decided to change to PIE.
+  \item Changing or extending an existing pipeline.
+  This refers to semantic changes to the pipeline: some pipeline steps need to be executed earlier, later, added or removed.
+  \item Maintaining an existing pipeline.
+  This refers to changes to the code that do not change the conceptual pipeline.
+  For example, there was a change in the api of a dependency, so now the pipeline code needs to be updated to the new api.
+  \item Reading the pipeline code to understand what it does, with no intention of changing it.
+  This will happen a lot, definitely the most if we include reading of code during the other user tasks.
+  If you want to change the pipeline in some way, you will likely need to read parts of it that do not need to be changed.
+  \item Debugging the pipeline.
+  This is not a goal by itself, but arises as part of the other tasks.
+  It is mentioned explicitly because it is important: being unable to properly debug the pipeline (even with just print statements) severely harms the user friendliness.
+\end{enumerate}
 
-
-
+\subsection{Ultimate goals of the PIE DSL and this thesis}
 Goal of the PIE DSL: make developing in PIE more user friendly by making it easier to write tasks.
 Goals of this thesis: extend / improve the PIE DSL system and verify that the changes did indeed make it easier to write tasks.
-We divide this into the following subgoals, depending on the task that the user is trying to achieve:
-- Increase readability. Readability is a nebulous concept, but it more or less means that we want to convey the necessary information/understanding in an as short a time as possible. "Necessary information" refers to the information that the user requires for their particular task.
-Note that this does not mean that we optimize for more concise code. More concise code is only useful if it allows the user to read the code faster.
-Reading the code happens in all user tasks, and is central to task 4: reading the pipeline code to understand it.
-- Increase the ease of writing. It should be easy and quick to write PIE DSL code.
-This can be achieved by making it specific to the domain of pipelines, by including types that are relevant to pipelines and by making common patterns easy to express.
-This is related to readability: if it is easy to read, it is likely not too long or complicated, so it would be easy to write as well.
-- Make it easy to reason about. This is sort of the step between reading and writing when making a change: once the user has read the code and understands what it does, it should be easy to reason about so that it is easy to figure out what to do to make the desired changes.
-The model of the framework is quite elegant, so we use it for the DSL as well.
-This makes it easier for users if they need to implement something in Java directly if the task they need cannot be expressed in the DSL.
-It also makes it easier to keep feature parity between the DSL and framework.
+We divide this into the following subgoals:
+\begin{enumerate}
+  \item Increase readability.
+  Readability is a nebulous concept, but it more or less means that we want to convey the necessary information/understanding in an as short a time as possible.
+  "Necessary information" refers to the information that the user requires for their particular task.
+  Note that this does not mean that we optimize for shorter code.
+  Shorter code is only useful if it allows the user to read the code faster.
+  Reading the code happens in all user tasks, and is central to task 4: ``reading the pipeline code to understand it''.
+  \item Increase the ease of writing.
+  It should be easy and quick to write PIE DSL code.
+  This can be achieved by making it specific to the domain of pipelines, by including types that are relevant to pipelines and by making common patterns easy to express.
+  This is related to readability: if it is easy to read, it is likely not too long or complicated, so it would be easy to write as well.
+  \item Make it easy to reason about.
+  This is the step between reading and writing when making a change: once the user has read the code and understands what it does, it should be easy to reason about so that it is easy to figure out what to do to make the desired changes.
+  The model of the framework is quite elegant, so we use it for the DSL as well.
+  This makes it easier for users if they need to implement something in Java directly if the task they need cannot be expressed in the DSL.
+  It also makes it easier to keep feature parity between the DSL and framework.
+  Because we closely follow the PIE model and that is completely (mostly?) done, this thesis does not provide major contributions to the model.
+\end{enumerate}
 
 
 Afterthought: I think of it like this:
-- readability: how easy is it to read some fragment (e.g. a single task) of code and understand what it does?
-- reasoning about it: once you understand what each fragment of code does, how easy is it to figure out what the program as a whole does? How easy is it to figure out what changes should be made to bring about some desired change in behavior? How easy is it to break up an understanding of what the program should do into fragments?
-- Writing: once you understand what fragments there should be and how the fragments should compose to do what you want, how easy is it to write down these fragments as code or to modify the existing fragments?
+\begin{itemize}
+  \item readability: how easy is it to read some fragment (e.g. a single task) of code and understand what it does?
+  \item reasoning about it: once you understand what each fragment of code does, how easy is it to figure out what the pipeline as a whole does?
+  How easy is it to figure out what changes should be made to bring about some desired change in behavior?
+  How easy is it to break up an understanding of what the pipeline should do into fragments?
+  \item Writing: once you understand what fragments there should be and how the fragments should compose to do what you want, how easy is it to write down these fragments as code or to modify the existing fragments?
+\end{itemize}
 
-Reasoning about it is mostly influenced by the model defined by PIE.
+Reasoning about the pipeline is mostly influenced by the model defined by PIE.
 The reading and writing are where the DSL should bring improvements.
 
-
+\subsection{Measurable goals for this thesis}
 Our direct goals for the DSL are impossible to measure directly because they depend on the user.
 There are however instrumental goals that improve usability:
-- Increase the average amount of information that is visible on the screen (while keeping the readability of that information the same).
-We optimize for the amount of code visible on the screen, instead of the code that is contained within a line, because ultimately, the user reads the code from the screen.
-Many languages have boilerplate in the form of imports.
-Users often don't need to look at the imports to understand the code, so we don't care how much information is in those lines.
-We wouldn't care about the amount of lines imports take at all if it wouldn't take longer for users to scroll down to the code. (idea: put imports at the bottom of the file?)
-- Reduce the amount of duplicate expressions of information.
-A duplicate expression of information is two or more places that express the same information.
-Duplicate expressions of information are bad because they need to be kept in sync: if the information changes, all expressions of it need to change as well.
-Duplicate expressions of information include code duplication, which expresses the same logic multiple times, but there other ways information can be expressed multiple times as well.
-A good example are PIE TaskDef identifiers.
-These are used to identify a task to the PIE framework.
-In regular TaskDefs, these are always `getClass().getName()', which returns the fully qualified name of the class.
-The obvious duplicate expression of information here is the duplicate code, which expresses the logic that all these classes use their qualified class name as their id.
-However, even when class ids are written out by hand, like `mb.tiger.spoofax.task.TigerShowParsedAst', it still is a duplicate expression of the information "this class is named TigerShowParsedAst and is located in package mb.tiger.spoofax.task", which is also already defined by the folder structure and file name AND the package statement and class name.
-Writing out the fully qualified id explicitly duplicates the qualified name, but it also implicitly duplicated the logic that classes use their qualified name implicitly.
-Using the expression `getClass().getName()' expresses that logic explicitly, and avoids duplicating the qualified class name.
-Java unfortunately does not allow us to de-duplicate the logic, but this logic is expressed only once in the DSL and the user does not even need to know that task definitions have IDs.
-- Increase editor services like static error reporting, showing documentation, automated imports and reference following. (PIE DSL compared to pure Java actually does the opposite: no documentation, no static checks and no following references from Java to PIE or vice versa. More static error reporting when comparing old DSL vs new DSL)
-- Increase expressiveness to increase applicability. Writing several tasks or helper functions and wrappers in Java does not improve user friendliness.
-Our main goal is to make it possible to express tasks at all, not necessarily to express things in multiple ways.
-- Increase applicability to various domains. PIE can't be user friendly if it doesn't work for your domain.
+\begin{enumerate}
+  \item Increase the average amount of information that is visible on the screen (while keeping the readability of that information the same).
+  We optimize for the amount of code visible on the screen, instead of the code that is contained within a line, because ultimately, the user reads the code from the screen.
+  Many languages have boilerplate in the form of imports.
+  Users often don't need to look at the imports to understand the code, so we don't care how much information is in those lines.
+  We wouldn't care about the amount of lines imports take at all if it wouldn't take longer for users to scroll down to the code.
+  (idea: put imports at the bottom of the file?)
+  \item Reduce the amount of duplicate expressions of information.
+  A duplicate expression of information is two or more places that express the same information.
+  Duplicate expressions of information are bad because they need to be kept in sync: if the information changes, all expressions of it need to change as well.
+  Duplicate expressions of information include code duplication, which expresses the same logic multiple times, but there other ways information can be expressed multiple times as well.
+  A good example are PIE TaskDef identifiers.
+  These are used to identify a task to the PIE framework.
+  In regular \id{TaskDef}s, these are always \inlinecode{getClass().getName()}, which returns the fully qualified name of the class.
+  The obvious duplicate expression of information here is the duplicate code, which expresses the logic that all these classes use their qualified class name as their ID.
+  However, even when class IDs are written out by hand, like \inlinecode{mb.tiger.spoofax.task.TigerShowParsedAst}, it still is a duplicate expression of the information "this class is named \id{TigerShowParsedAst} and is located in package \inlinecode{mb.tiger.spoofax.task}", which is also already defined by the folder structure and file name \emph{and} the package statement and class name.
+  Writing out the fully qualified ID explicitly duplicates the qualified name, but it also implicitly duplicated the logic that classes use their qualified name implicitly.
+  Using the expression \inlinecode{getClass().getName()} expresses that logic explicitly, and avoids duplicating the qualified class name.
+  Java unfortunately does not allow us to de-duplicate the logic, but this logic is expressed only once in the DSL and the user does not even need to know that task definitions have IDs.
+  \item Increase editor services like static error reporting, showing documentation, automated imports and reference following.
+  PIE DSL compared to pure Java actually does the opposite: no documentation, no static checks and no following references from Java to PIE or vice versa. There is however more static error reporting when comparing the old DSL to the new DSL.
+  \item Increase expressiveness to increase applicability.
+  Writing several tasks or helper functions and wrappers in Java does not improve user friendliness.
+  Our main goal is to make it possible to express tasks at all, not necessarily to express things in multiple ways.
+  \item Increase applicability to various domains. PIE can't be user friendly if it doesn't work for your domain.
+\end{enumerate}
 
-To evaluate whether the new PIE DSL meets these goals, we use PIE DSL to express pipelines in various domains:
-- Spoofax 3 language compiler pipeline. Compiles a language specification to a language implementation.
-- PGX-A program pipeline. Compiles a program from Green-Marl to C, C++, PL/SQL.
-- Code editor/IDE for Tiger. Various tasks for editor actions.
-- Testing pipeline: pipeline for testing the generated parser and prettyprinter of a language.
-- Benchmarking: benchmarking pipelines for various things. We only want to re-execute the benchmark for tests that were changed.
+To evaluate whether the new PIE DSL meets these goals, we use the PIE DSL to express pipelines in various domains:
+\begin{itemize}
+  \item Spoofax 3 language compiler pipeline.
+  Compiles a language specification to a language implementation.
+  \item PGX-A program pipeline.
+  Compiles a program from Green-Marl to C, C++, PL/SQL.
+  \item Code editor/IDE for Tiger.
+  Various tasks for editor actions.
+  \item Testing pipeline.
+  A pipeline for testing the generated parser and prettyprinter of a language.
+  \item Benchmarking.
+  Benchmarking pipelines for various things. We only want to re-execute the benchmarks for elements that were changed.
+\end{itemize}
 
 These case studies will be evaluated on the following points:
-- Lines of code. We express each pipeline in the old DSL, the new DSL and Java. Because we express the exact same pipeline in all these languages, they each contain the same total amount of information. This means that we can use the lines of code to compare the amount of information per line in each language. This covers the amount of information that is visible on screen (sort of).
-- The amount of information that is duplicated. \todo
-- The percentage of tasks that can be expressed in the DSL.
-This covers the expressiveness of the DSL. We will also compare this percentage between case studies to gauge how applicable the PIE DSL is across domains.
-- Performance of the PIE tasks.
-While we don't require that the generated code is as fast as handwritten code, it should not be more than half a second / a factor 3 slower (whichever is higher).
-- Build time of the pipeline.
-This is less important than the runtime, but having to wait a long time to test a pipeline is really annoying. Will be tested for both a clean build and with changes in a single task (incremental build).
+\begin{enumerate}
+  \item Lines of code.
+  We express each pipeline in the old DSL, the new DSL and Java.
+  Because we express the exact same pipeline in all these languages, they each contain the same total amount of information.
+  This means that we can use the lines of code to compare the amount of information per line in each language.
+  This covers the amount of information that is visible on screen (sort of).
+  \item The amount of information that is duplicated. \todo{How to test this?}
+  \item The percentage of tasks that can be expressed in the DSL.
+  This covers the expressiveness of the DSL.
+  We will also compare this percentage between case studies to gauge how applicable the PIE DSL is across domains.
+  \item Performance of the PIE tasks.
+  While we don't require that the generated code is as fast as handwritten code, it should not be more than half a second / a factor 3 slower (whichever is higher).
+  \item Build time of the pipeline.
+  This is less important than the runtime, but having to wait a long time to test a pipeline is really annoying.
+  Will be tested for both a clean build and with changes in a single task (incremental build).
+\end{enumerate}
 
 We will also perform some evaluations outside the case studies.
-- Editor services will be analyzed from a theoretical perspective. This is not done as part of the case studies because this focusses on dynamic errors during development, and I really do not feel like writing down every time I get a static error or follow a reference.
-- The time to write tasks is an important factor for the user friendliness, but is again something that cannot be tested with a completed pipeline. It is also hard to test objectively because experience from the other languages will likely improve the time of the last language. Instead, we will take some tasks that have already been implemented, read them, remove them (and the dependencies which are not used by other tasks), and then write them again to see how long that takes.
+\begin{enumerate}
+  \item Editor services will be analyzed from a theoretical perspective.
+  This is not done as part of the case studies because this concerns dynamic errors during development, and I really do not feel like writing down every time I get a static error or follow a reference.
+  \item The time to write tasks is an important factor for the user friendliness, but is again something that cannot be tested with a completed pipeline.
+  It is also hard to test objectively because experience from the other languages will likely improve the time of the last language.
+  Instead, we will take some tasks that have already been implemented, read them, remove them (and the dependencies which are not used by other tasks), and then write them again to see how long that takes.
+\end{enumerate}
 
 
 \subsection{Boilerplate reduction}
