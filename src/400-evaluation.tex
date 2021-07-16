@@ -1,10 +1,125 @@
 \chapter{Evaluation}
 \label{chap:evaluation}
 
-The goal of the \ac{PIE} \ac{DSL} is to reduce boilerplate and bugs.
+The goal of this thesis is to improve the \ac{PIE} \ac{DSL} by adding and improving language features and integration with the rest of the environment.
+This chapter evaluates whether we met this goal by using the \ac{PIE} \ac{DSL} in three case studies and comparing the new \ac{DSL} to the old \ac{DSL} and to pure Java.
+There are two main research questions:
+\begin{enumerate}
+  \item Did the changes to the \ac{PIE} \ac{DSL} improve it?
+  \item Is the new \ac{PIE} \ac{DSL} better than Java for expressing \ac{PIE} pipelines?
+\end{enumerate}
+
+To evaluate if the changes made the \ac{DSL} better than the old \ac{DSL} and Java, we need to know the goal of the \ac{PIE} \ac{DSL}.
+The goal of the \ac{PIE} \ac{DSL} is to reduce boilerplate and bugs when implementing \ac{PIE} pipelines compared to implementing tasks in Java.
 It should do this without sacrificing runtime performance or build time performance.
 From a design perspective, the \ac{PIE} \ac{DSL} should cover future use cases as much as possible, or be extendable so that new language features could be added to cover unforeseen use cases.
-This chapter evaluates whether the \ac{PIE} \ac{DSL} met these goals by applying it to three case studies and possibly some performance testing.
+To evaluate if the changes have improved the \ac{PIE} \ac{DSL} we will answer the following questions:
+\begin{enumerate}
+  \item Does the new \ac{DSL} have less boilerplate than the old \ac{DSL}?
+  % Answer: new has more boilerplate when comparing existing programs.
+  % However, new DSL can be applied in more situations.
+  % If we include Java code that was required in old DSL,
+  % new DSL should have far less boilerplate
+  \item Does the new \ac{DSL} provide less opportunities for mistakes than the old \ac{DSL}?
+  % Note: give examples of where they could happen in the case studies
+  % Answer: Don't know if there are more or less bugs in the language implementation.
+  % Statix makes it easier to catch bugs, but the language is
+  % also far bigger now.
+  % There are a few extra static semantics checks that did not happen 
+  % in the NaBL2 implementation, for example:
+  % - warnings for empty lists
+  % - errors for duplicate modules
+  % - errors for duplicate modifiers of data def
+  % - errors for inheritance loop (was also done in NaBL2?)
+  % - errors for incorrect return type on overridden methods (also in NaBL2?)
+  % - errors when importing something with a name that already exists
+  %   (previously only gave errors when the imported name was used)
+  % Note: the Statix spec has less superfluous errors.
+  % This makes it easier to find and solve an error when it occurs.
+  \item Does the new \ac{DSL} provide less opportunities for mistakes than Java?
+  % Note: give examples of where they could happen in the case studies
+  % Answer: If we assume that the foreign Java stuff is imported correctly
+  % and ignore known and unknown bugs, PIE DSL is safer.
+  % It has mostly the same semantics as Java,
+  % but explicit nullability and better semantics for comparisons
+  % (Java allows comparing anything to anything,
+  % PIE only if there are overlapping values)
+  % Note also that the Java ecosystem is far more mature than the PIE DSL.
+  % IDEs like IntelliJ will highlight issues that are not defined on the 
+  % Java language itself, like a comparison `x == true` which can be simplified
+  % to just `x` if it is a bool/boolean.
+  % However, those assumptions are definitely not valid:
+  % importing foreign java definition will almost always go wrong
+  % and there are known (and unknown) bugs in the implementation of PIE DSL.
+  \item Did the changes make the \ac{DSL} harder or easier to understand?
+  % Answer: a little harder because more language features
+  % That is because things are now possible that were not possible before.
+  % So overall greater applicability outweighs the increase in complexity.
+  % There is also documentation now, so that really helps. 
+  % Module system makes files smaller, which aids understanding as well.
+  \item Did the changes to the \ac{DSL} extend the applicability of the \ac{DSL}?
+  % Answer: should greatly increase for each case study.
+  \item Did the changes to the \ac{DSL} extend the expressibility of the \ac{DSL}?
+  % Answer: should be better
+  \item How does the performance of the new \ac{DSL} compare to the old one and to pure Java?
+  % Answer: compared to old: probably slower, given that 
+  % most of the old code will be handwritten in Java.
+  % When only comparing code generated from PIE tasks, should be equal.
+  % Compared to handwritten Java: probably slower
+  % question is if slow down is significant
+  % Does this decrease in performance impact the user experience?
+  % Assume that a performance decrease of 10% is significant once
+  % the total runtime goes over .1 seconds
+  % (todo: reference that less than .1 seconds feels like "instant")
+\end{enumerate}
+
+
+To evaluate these research questions, we implement \ac{PIE} pipelines in three case studies in the new \ac{DSL}, the old \ac{DSL} and in Java.
+We compare the code for each of these languages to answer the questions.
+
+\paragraph{Question 1: Does the new \ac{DSL} have less boilerplate than the old \ac{DSL}?}
+It is hard to define the amount of boilerplate in a project, but we can use the fact that we implement the same pipeline in 3 languages with the same underlying model and framework.
+Any differences in code size must be the result of boilerplate.
+We measure code size in two ways: lines of code (including empty lines) and amount of characters.
+We count all consecutive layout as a single character, e.g. \inlinecode{1 23   4  5} counts as 8 characters: 5 digits and 3 ``characters'' of layout. \todo{Make spaces in example visible}
+
+\paragraph{Question 2 \& 3: Does the new \ac{DSL} provide less opportunities for errors than the old \ac{DSL} \& Java?}
+This question is answered on a theoretical basis by comparing the possible errors in these languages.
+Languages are evaluated based on the number and severity of the possible errors.
+We will focus on differences between languages, so errors with the same severity in all languages are not considered.
+There are four categories of errors, in order of increasing severity: compile time, Java, runtime or bug. \todo{Better word than severity, better names for severities}
+A compile time error is caught by the compiler at build time.
+The severity `Java' is only relevant for the \acp{DSL} and is for errors that are not caught by the \ac{PIE} \ac{DSL} compiler but only when compiling the generated Java code.
+A runtime error is an exception thrown at runtime.
+Finally, a bug is a kind of error where the code runs to completion, but it returns incorrect results.
+
+\paragraph{Question 4: Did the changes make the \ac{DSL} harder or easier to understand?}
+This compares the old \ac{DSL} with the new \ac{DSL}.
+We will compare the \ac{PIE} code in the case studies to see what changed, and make a subjective judgement of whether these changes make the \ac{DSL} harder or easier. \question{Do you know of a more objective way to judge if code is harder or easier?}
+
+\paragraph{Question 5: Did the changes to the \ac{DSL} extend the applicability of the \ac{DSL}?}
+This question asks in how many domains the \ac{DSL} works well.
+We compare the percentage of handwritten tasks that can be expressed in the old and in the new \ac{DSL} in each case study.
+`Handwritten' means that we exclude tasks that are generated by Spoofax, as these don't need to be expressed in the \ac{DSL}.
+
+\paragraph{Question 6: Did the changes to the \ac{DSL} extend the expressibility of the \ac{DSL}?}
+This question explores how much of the problems can be expressed in the \ac{PIE} \ac{DSL}.
+We compare how many of the helper functions that were required with the old \ac{DSL} are still required with the new \ac{DSL}.
+
+\paragraph{Question 7: How does the performance of the new \ac{DSL} compare to the old one and to pure Java?}
+Performance was not the focus for this thesis, but it is nonetheless important for the user experience.
+\Ac{PIE} stands for \acl{PIE} because one of its goals is to be suitable for interactive environments.
+This places rather stringent requirements on the runtime performance, as humans perceive delays as low as 0.1 seconds \missingref.
+Therefore, we evaluate the runtime that is spent in the code for handwritten tasks in each of the languages.
+The task code only refers to the code in the class that implements the task, so code that is called from the task is not included.
+For the \acp{DSL} we compare both the runtime from all handwritten tasks and the runtime of only the tasks that are implemented in the \ac{DSL}.
+We also evaluate the runtime of the overall build, as that is relevant for the users.
+We run the build without cached outputs from previous runs, because we want to exercise the Java task code and the performance when task outputs are cached is beyond the scope of this thesis.
+
+
+
+
+\section{[TMP] Rest}
 
 The first case study uses Tiger, which is a small functional language.
 This gives a clean example of how the PIE DSL can be used to parse, analyze and compile a Spoofax language.
